@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <PackageId>DiscuitSharp</PackageId>
+    <Version>0.1.0-alpha.1</Version>
+    <Authors>Michael Stiver-Balla</Authors>
+    <Company>Michael Stiver-Balla</Company>
+    <Product>Discuit Sharp</Product>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
+    <Description>
+      DiscuitSharp is a .NET Standard library that provides easy access to the Discuit API with no direct low-level network or HTTP configuration required.
+    </Description>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Common\DataPage.cs" />
+    <Compile Remove="Common\NullPage.cs" />
+    <Compile Remove="Common\Page.cs" />
+    <Compile Remove="Common\Pager.cs" />
+    <Compile Remove="Common\PagerState.cs" />
+    <Compile Remove="Common\TaskPage.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    <PackageReference Include="xunit.extensibility.core" Version="2.4.2" />
+  </ItemGroup>
+
+</Project>
