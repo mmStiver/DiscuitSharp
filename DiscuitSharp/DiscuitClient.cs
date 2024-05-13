@@ -40,7 +40,7 @@ namespace DiscuitSharp.Core
         Task<ImagePost?> Create(ImagePost post);
         Task<Comment?> Create(PublicPostId postId, Comment post);
         Task<Comment?> Create(PublicPostId postId, CommentId? parentId, Comment comment);
-        Task<Post?> Delete(PublicPostId postId, bool? deleteContent = null);
+        Task<bool?> Delete(PublicPostId postId, bool? deleteContent = null);
         Task<Comment?> Delete(PublicPostId postId, CommentId commentId);
         Task<Community?> Get(CommunityId Id);
         Task<Community?> GetCommunity(string Name);
@@ -283,13 +283,14 @@ namespace DiscuitSharp.Core
 
             var body = JsonSerializer.Serialize(new
             {
-                type = post.Type,
+                type = post.Type.Description(),
                 title = post.Title,
                 body = post.Body,
                 community = post.CommunityName
             }, options);
+            var strContent = new StringContent(body, Encoding.UTF8, "application/json");
 
-            return await Post<TextPost?>("posts", body);
+            return await Send<TextPost?>(HttpMethod.Post, "posts", strContent);
         }
         public async Task<LinkPost?> Create(LinkPost post)
         {
@@ -300,7 +301,7 @@ namespace DiscuitSharp.Core
 
             var body = JsonSerializer.Serialize(new
             {
-                type = post.Type,
+                type = post.Type.Description(),
                 title = post.Title,
                 url = post.Link.Url,
                 community = post.CommunityName
@@ -318,7 +319,7 @@ namespace DiscuitSharp.Core
 
             var body = JsonSerializer.Serialize(new
             {
-                type = post.Type,
+                type = post.Type.Description(),
                 title = post.Title,
                 community = post.CommunityName,
                 ImageId = post.Image.Id
@@ -424,15 +425,21 @@ namespace DiscuitSharp.Core
             return await Send<Comment?>(HttpMethod.Post, "_commentVote", content);
         }
 
-        public async Task<Post?> Delete(PublicPostId postId, bool? deleteContent = null)
-            => await Delete<Post>(
+        public async Task<bool?> Delete(PublicPostId postId, bool? deleteContent = null)
+        { 
+            
+            await Send(
+                HttpMethod.Delete,
                 deleteContent switch
                 {
                     true => $"posts/{postId.Value}?deleteContent=true",
                     false => $"posts/{postId.Value}?deleteContent=false",
-                    _ => $"posts/{postId.Value}"
+                    _ => $"posts/{postId.Value}?deleteAs=Normal"
                 }
                 );
+
+            return true;
+        }
 
         public async Task<Comment?> Delete(PublicPostId postId, CommentId commentId)
             => await Delete<Comment?>( $"posts/{postId.Value}/comments/{commentId.Value}");

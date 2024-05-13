@@ -36,7 +36,7 @@ namespace DiscuitSharp.Test.Authenticated
                 { PathAndQuery: "/api/posts/dfghfgh", Method: "GET" } => (HttpStatusCode.OK, AuthTestFixture.ReferenceLinkPostContent),
                 { PathAndQuery: "/api/posts/vclkj85d", Method: "GET" } => (HttpStatusCode.OK, AuthTestFixture.ReferenceImagePostContent),
                 { PathAndQuery: "/api/posts/kvzM1JLq", Method: "GET" } => (HttpStatusCode.OK, @"{ ""id"":""s5a4654dsf54c16a5s4df654as"", ""publicId"" : ""kvzM1JLq"", ""type"":""text"", ""comments"":[{""commentId"":""17c93f8221b8ded65ca6dcce""}] }"),
-                { PathAndQuery: "/api/posts", Method: "POST" } => CommunityContent(json!["type"]?.GetValue<int>(),
+                { PathAndQuery: "/api/posts", Method: "POST" } => CommunityContent(json!["type"]?.GetValue<string>(),
                                                                         json!["title"]?.GetValue<string>(),
                                                                         json!["community"]?.GetValue<string>(),
                                                                         json!["body"]?.GetValue<string>(),
@@ -49,13 +49,12 @@ namespace DiscuitSharp.Test.Authenticated
                 { PathAndQuery: "/api/posts/A3c39F9", Method: "GET" } => (HttpStatusCode.OK, GetPostWithComments),
 
                 { PathAndQuery: "/api/posts/0000000000", Method: "DELETE" } => (HttpStatusCode.OK, @"{{""status"":404,""code"":""post/not-found"",""message"":""Post(s) not found.""}}"),
-                { PathAndQuery: "/api/posts/fL0ounHq", Method: "DELETE" } => (HttpStatusCode.OK, $"{DeleteTextPost}"),
-                { PathAndQuery: "/api/posts/fL0ounHq?DeleteAs=mods", Method: "DELETE" } => (HttpStatusCode.BadRequest, @"{ ""status"":400,""code"":""user/invalid-group"",""message"":""Invalid user-group.""}"),
-                { PathAndQuery: "/api/posts/fL0ounHq?DeleteAs=admins", Method: "DELETE" } => (HttpStatusCode.BadRequest, @"{ ""status"":400,""code"":""user/invalid-group"",""message"":""Invalid user-group.""}"),
-                { PathAndQuery: "/api/posts/fL0ounHq?deleteContent=false", Method: "DELETE" } => (HttpStatusCode.OK, $"{DeleteTextPost}"),
-                { PathAndQuery: "/api/posts/fL0ounHq?deleteContent=true", Method: "DELETE" } => (HttpStatusCode.OK, $"{DeleteTextPostContent}"),
-                { PathAndQuery: "/api/posts/dfghfgh?deleteContent=true", Method: "DELETE" } => (HttpStatusCode.OK, $"{DeleteLinkPostContent}"),
-                { PathAndQuery: "/api/posts/vclkj85d?deleteContent=true", Method: "DELETE" } => (HttpStatusCode.OK, $"{DeleteImagePostContent}"),
+                { PathAndQuery: "/api/posts/fL0ounHq", Method: "DELETE" } => (HttpStatusCode.InternalServerError, @"{{""status"":400,""code"":""user/invalid-group"",""message"":""The user group being sent is incorrect.""}}"),
+                { PathAndQuery: "/api/posts/fL0ounHq?deleteAs=Normal", Method: "DELETE" } => (HttpStatusCode.OK, ""),
+                { PathAndQuery: "/api/posts/fL0ounHq?deleteAs=mods", Method: "DELETE" } => (HttpStatusCode.BadRequest, @"{ ""status"":400,""code"":""user/invalid-group"",""message"":""Invalid user-group.""}"),
+                { PathAndQuery: "/api/posts/fL0ounHq?deleteAs=admins", Method: "DELETE" } => (HttpStatusCode.BadRequest, @"{ ""status"":400,""code"":""user/invalid-group"",""message"":""Invalid user-group.""}"),
+                { PathAndQuery: "/api/posts/d3viYYpm?deleteContent=false", Method: "DELETE" } => (HttpStatusCode.BadRequest, $""),
+                { PathAndQuery: "/api/posts/d3viYYpm?deleteContent=true", Method: "DELETE" } => (HttpStatusCode.OK, $""),
                 
                 { PathAndQuery: "/api/posts/Rg8TkGaE", Method: "PUT" } => PostContent(json!["title"]?.GetValue<string>(),
                                                                         json!["body"]?.GetValue<string>(),
@@ -104,14 +103,14 @@ namespace DiscuitSharp.Test.Authenticated
 
                 _ => throw new Exception("unknown error")
             };
-        private (HttpStatusCode OK, string) CommunityContent(int? type, string? title, string? community, string? body, string? url, string? ImageId)
+        private (HttpStatusCode OK, string) CommunityContent(string? type, string? title, string? community, string? body, string? url, string? ImageId)
             => (type, title, community) switch
             {
                 { type: _, title: not null, community: null } => (HttpStatusCode.BadRequest, @"{""status"":400,""code"":""community/not-found"",""message"":""Community not found.""}"),
                 { type: _, title: null or "", community: not null } => (HttpStatusCode.BadRequest, @"{""status"":400,""code"":""community/not-found"",""message"":""Title too short.""}"),
-                { type: 1, title: not null, community: not null } => (HttpStatusCode.OK, NewTextPost),
-                { type: 2, title: not null, community: not null } => (ImageId == "17c67e1be2b732bfd47") ? (HttpStatusCode.OK, NewImagePost) : (HttpStatusCode.BadRequest, @"{""status"":400,""code"":""invalid_image_id"",""message"":""Invalid image ID.""}"),
-                { type: 3, title: not null, community: not null } => (HttpStatusCode.OK, NewLinkPost),
+                { type: "text", title: not null, community: not null } => (HttpStatusCode.OK, NewTextPost),
+                { type: "image", title: not null, community: not null } => (ImageId == "17c67e1be2b732bfd47") ? (HttpStatusCode.OK, NewImagePost) : (HttpStatusCode.BadRequest, @"{""status"":400,""code"":""invalid_image_id"",""message"":""Invalid image ID.""}"),
+                { type: "link", title: not null, community: not null } => (HttpStatusCode.OK, NewLinkPost),
                 //{"status":400,"code":"invalid_image_id","message":"Invalid image ID."}
                 { type: _, title: not null, community: not null } => (HttpStatusCode.BadRequest, @"{""status"":400,""code"":""post-type/unsupported"",""message"":""Unsupported post type.""}"),
                 _ => throw new Exception("unknown error")

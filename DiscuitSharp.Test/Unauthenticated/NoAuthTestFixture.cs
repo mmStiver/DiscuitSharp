@@ -44,10 +44,12 @@ namespace DiscuitSharp.Test.Unauthenticated
                  { PathAndQuery: "/api/posts?next=17692e122def73f25bd757e0", Method: "GET" } => (HttpStatusCode.OK, $"{{\"posts\":[{ImagePost}],\"next\":\"6146d6ba09fd32c01816a09fd32c\"}}"),
 
                  { PathAndQuery: "/api/posts", Method: "POST" } => (HttpStatusCode.Unauthorized, @"{""status"":401,""code"":""not_logged_in"",""message"":""User is not logged in.""}"),
-                 { PathAndQuery: "/api/posts/000000", Method: "DELETE" } => (HttpStatusCode.Unauthorized, @"{""status"":401,""code"":""not_logged_in"",""message"":""User is not logged in.""}"),
+                 
+                 { PathAndQuery: "/api/posts/000000?deleteAs=Normal", Method: "DELETE" } => (HttpStatusCode.Unauthorized, @"{""status"":401,""code"":""not_logged_in"",""message"":""User is not logged in.""}"),
                  { PathAndQuery: "/api/posts/000000?deleteContent=true", Method: "DELETE" } => (HttpStatusCode.Unauthorized, @"{""status"":401,""code"":""not_logged_in"",""message"":""User is not logged in.""}"),
                  { PathAndQuery: "/api/posts/000000?deleteContent=false", Method: "DELETE" } => (HttpStatusCode.Unauthorized, @"{""status"":401,""code"":""not_logged_in"",""message"":""User is not logged in.""}"),
-                 { PathAndQuery: "/api/posts/fL0ounHq", Method: "DELETE" } => (HttpStatusCode.Unauthorized, @"{""status"":401,""code"":""not_logged_in"",""message"":""User is not logged in.""}"),
+                 { PathAndQuery: "/api/posts/fL0ounHq?deleteAs=Normal", Method: "DELETE" } => (HttpStatusCode.Unauthorized, @"{""status"":401,""code"":""not_logged_in"",""message"":""User is not logged in.""}"),
+                 
                  { PathAndQuery: "/api/posts/G7YMijpa/comments?next=2aa28ac7329270fff34f04a", Method: "GET" } => (HttpStatusCode.OK, $"{{ \"comments\": {NextPageDetailedComment}, \"next\": null }}"),
                  { PathAndQuery: "/api/posts/G7YMijpa/comments", Method: "GET" } => (HttpStatusCode.OK, $"{{ \"comments\": [{DetailedComment}], \"next\": \"2aa28ac7329270fff34f04a\" }}"),
                  { PathAndQuery: "/api/posts/MoiuhIkK/comments", Method: "GET" } => (HttpStatusCode.OK, $"{{ \"comments\": [{DeletedComment}], \"next\": \"2aa28ac7329270fff34f04a\" }}"),

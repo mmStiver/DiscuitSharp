@@ -416,7 +416,7 @@ namespace DiscuitSharp.Test.Unauthenticated
         }
 
         [Fact]
-        public async Task CreatePost_ValidTextPost_UnauthenticatedException()
+        public async Task CreatePost_ValidLinkPost_UnauthenticatedException()
         {
             var client = await clientTask;
             Link li = new Link("http://example.ca", new Core.Media.Image());
@@ -433,7 +433,7 @@ namespace DiscuitSharp.Test.Unauthenticated
         {
             var client = await clientTask;
             PublicPostId Id = new("000000");
-            Task<Post?> act() => client.Delete(Id);
+            Task<bool?> act() => client.Delete(Id);
 
             var exception = await Assert.ThrowsAsync<APIRequestException>(act);
             Assert.Equal(HttpStatusCode.Unauthorized, exception.StatusCode);
@@ -443,7 +443,7 @@ namespace DiscuitSharp.Test.Unauthenticated
         {
             var client = await clientTask;
             PublicPostId Id = new("000000");
-            Task<Post?> act() => client.Delete(Id, true);
+            Task<bool?> act() => client.Delete(Id, true);
 
             var exception = await Assert.ThrowsAsync<APIRequestException>(act);
             Assert.Equal(HttpStatusCode.Unauthorized, exception.StatusCode);
@@ -453,7 +453,7 @@ namespace DiscuitSharp.Test.Unauthenticated
         {
             var client = await clientTask;
             PublicPostId Id = new("000000");
-            Task<Post?> act() => client.Delete(Id, false);
+            Task<bool?> act() => client.Delete(Id, false);
 
             var exception = await Assert.ThrowsAsync<APIRequestException>(act);
             Assert.Equal(HttpStatusCode.Unauthorized, exception.StatusCode);
@@ -464,7 +464,7 @@ namespace DiscuitSharp.Test.Unauthenticated
             var client = await clientTask;
             PublicPostId Id = new("fL0ounHq");
 
-            Task<Post?> act() => client.Delete(Id);
+            Task<bool?> act() => client.Delete(Id);
 
             var exception = await Assert.ThrowsAsync<APIRequestException>(act);
             Assert.Equal(HttpStatusCode.Unauthorized, exception.StatusCode);

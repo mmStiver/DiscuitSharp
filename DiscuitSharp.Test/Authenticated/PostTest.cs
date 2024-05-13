@@ -359,6 +359,36 @@ namespace DiscuitSharp.Test.Authenticated
         }
 
         [Fact] public async Task
+        DeletePost_DeletePostById_ReturnSuccess()
+        {
+            var client = await discClentTask;
+            TextPost? txt = new TextPost("Title", "Test", "Data")
+            {
+                PublicId = new PublicPostId("fL0ounHq")
+            };
+           
+            var res = await client.Delete(txt.PublicId.Value);
+            
+            Assert.NotNull(res);
+            Assert.True(res);
+        }
+        [Fact]
+        public async Task
+        DeletePost_DeletePostAndContent_ReturnSuccess()
+        {
+            var client = await discClentTask;
+            TextPost? txt = new TextPost("Title", "Test", "Data")
+            {
+                PublicId = new PublicPostId("d3viYYpm")
+            };
+
+            var res = await client.Delete(txt.PublicId.Value, true);
+
+            Assert.NotNull(res);
+            Assert.True(res);
+        }
+
+        [Fact] public async Task
         LockPost_SubmitPostToLockAsUser_InsufficientPrivledgesException()
         {
             var client = await discClentTask;
