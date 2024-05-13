@@ -3,19 +3,38 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <PackageId>DiscuitSharp</PackageId>
-    <Version>0.1.0-alpha.1</Version>
+    <Version>0.1.0-alpha.2</Version>
     <Authors>Michael Stiver-Balla</Authors>
     <Company>Michael Stiver-Balla</Company>
     <Product>Discuit Sharp</Product>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
     <Description>
       DiscuitSharp is a .NET Standard library that provides easy access to the Discuit API with no direct low-level network or HTTP configuration required.
     </Description>
+    <Copyright>Copyright 2024 Michael Stiver-Balla</Copyright>
+    
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
+    <PackageTags>API; Client; Social Media; Discuit; .NET; Wrapper; SDK; OAuth; HTTP</PackageTags>
+    <PackageProjectUrl>https://github.com/mmStiver/DiscuitSharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mmStiver/DiscuitSharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>Initial alpha release of DiscuitSharp.</PackageReleaseNotes>
+
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    
+  </PropertyGroup>
+
+  <ItemGroup>
+    
+    <None Include="..\README.md" Pack="true" PackagePath="\"/>
+    
+  </ItemGroup>
+  
   <ItemGroup>
     <Compile Remove="Common\DataPage.cs" />
     <Compile Remove="Common\NullPage.cs" />
@@ -26,8 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-    <PackageReference Include="xunit.extensibility.core" Version="2.4.2" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
   </ItemGroup>
 
 </Project>
