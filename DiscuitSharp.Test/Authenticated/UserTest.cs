@@ -1,5 +1,7 @@
 ﻿using DiscuitSharp.Core;
 using DiscuitSharp.Core.Auth;
+using DiscuitSharp.Core.Exceptions;
+
 
 
 //using DiscuitSharp.Test.Unauthenticated.Unauthorized;
@@ -30,6 +32,16 @@ namespace DiscuitSharp.Test.Authenticated
 
             Assert.NotNull(user);
             Assert.Equal("mmstiver", user.Username);
+        }
+
+        [Fact]
+        public async Task SignOut_CurrentAuth_InvalidateLogin()
+        {
+            var client = await discClentTask;
+
+            Assert.True(await client.InvalidateAuth());
+
+            
         }
     }
 }

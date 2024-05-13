@@ -65,7 +65,7 @@ namespace DiscuitSharp.Test.Unauthenticated
         {
             var client = await clientTask;
 
-            Task<DiscuitUser?> act() => client.InvalidateAuth();
+            Task<bool?> act() => client.InvalidateAuth();
 
             var exception = await Assert.ThrowsAsync<APIRequestException>(act);
             Assert.Equal(HttpStatusCode.InternalServerError, exception.StatusCode);

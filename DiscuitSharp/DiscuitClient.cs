@@ -26,7 +26,7 @@ namespace DiscuitSharp.Core
         string? Token { get; }
         Task<Initial?> GetInitial();
         Task<DiscuitUser?> Authenticate(Credentials creds);
-        Task<DiscuitUser?> InvalidateAuth();
+        Task<bool?> InvalidateAuth();
         Task<DiscuitUser?> GetAuthenticatedUser();
         Task<DiscuitUser?> GetUser(string UserName);
         Task<Post?> Get(PublicPostId postId);
@@ -163,28 +163,11 @@ namespace DiscuitSharp.Core
             return content;
         }
 
-        public async Task<DiscuitUser?> InvalidateAuth()
+        public async Task<bool?> InvalidateAuth()
         {
-
-            var request = new HttpRequestMessage(HttpMethod.Post, "_login?action=logout");
-
-            request.Headers.Add("X-Csrf-Token", this.Token);
-
-            var httpResponseMessage = await client.SendAsync(request);
-            if (!httpResponseMessage.IsSuccessStatusCode)
-            {
-                APIError? errorBody = await httpResponseMessage.Content.ReadFromJsonAsync<APIError?>();
-                if (errorBody != null)
-                {
-                    var exception = new APIRequestException(errorBody.Value, httpResponseMessage.StatusCode, httpResponseMessage.ReasonPhrase);
-                    throw exception;
-                }
-
-                httpResponseMessage.EnsureSuccessStatusCode();
-            }
-            var content = await httpResponseMessage.Content.ReadFromJsonAsync<DiscuitUser?>();
-
-            return content;
+            await Send(HttpMethod.Post, "_login?action=logout");
+            this.Token = String.Empty;
+            return true;
         }
 
         public async Task<IEnumerable<Community>?> GetCommunities()
@@ -490,6 +473,31 @@ namespace DiscuitSharp.Core
             return await httpResponseMessage.Content.ReadFromJsonAsync<T>(options);
 
         }
+
+        private async Task Send(HttpMethod method, string endpoint, StringContent? contentBody = null)
+        {
+            var request = new HttpRequestMessage(method, endpoint);
+
+            if (!String.IsNullOrEmpty(this.Token))
+                request.Headers.Add("X-Csrf-Token", this.Token);
+
+            if (contentBody != null)
+                request.Content = contentBody;
+
+            var httpResponseMessage = await client.SendAsync(request);
+            if (!httpResponseMessage.IsSuccessStatusCode)
+            {
+                APIError? errorBody = await httpResponseMessage.Content.ReadFromJsonAsync<APIError?>();
+                if (errorBody != null)
+                {
+                    var exception = new APIRequestException(errorBody.Value, httpResponseMessage.StatusCode, httpResponseMessage.ReasonPhrase);
+                    throw exception;
+                }
+
+                httpResponseMessage.EnsureSuccessStatusCode();
+            }
+        }
+
 
         private async Task<T?> Send<T>(HttpMethod method, string endpoint, StringContent? contentBody = null)
         {

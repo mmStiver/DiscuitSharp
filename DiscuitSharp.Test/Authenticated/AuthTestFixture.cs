@@ -29,6 +29,7 @@ namespace DiscuitSharp.Test.Authenticated
                 { PathAndQuery: "/api/_initial", Method: "GET" } => (HttpStatusCode.OK, Initial),
                 { PathAndQuery: "/api/_user", Method: "GET" } => (HttpStatusCode.OK, User),
                 { PathAndQuery: "/api/_login", Method: "POST" } => checkCredentials(json!["username"]?.GetValue<string>(), json!["password"]?.GetValue<string>()),
+                { PathAndQuery: "/api/_login?action=logout", Method: "POST" } => (HttpStatusCode.OK, ""),
                 { PathAndQuery: "/api/communities?set=Subscribed", Method: "GET" } => (HttpStatusCode.OK, $"{SubscribedCommunities}"),
                 { PathAndQuery: "/api/_uploads", Method: "GET" } => (HttpStatusCode.OK, $"{ImageUpload}"),
                 { PathAndQuery: "/api/posts/Rg8TkGaE", Method: "GET" } => (HttpStatusCode.OK, AuthTestFixture.ReferenceTextPost),
