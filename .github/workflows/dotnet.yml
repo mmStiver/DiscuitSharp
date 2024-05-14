@@ -24,6 +24,8 @@ jobs:
       working-directory: DiscuitSharp
       run: dotnet restore
     - name: Build
+      working-directory: DiscuitSharp
       run: dotnet build --no-restore
     - name: Test
+      working-directory: DiscuitSharp.Test
       run: dotnet test --no-build --verbosity normal
