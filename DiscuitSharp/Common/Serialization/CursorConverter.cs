@@ -18,6 +18,7 @@ namespace DiscuitSharp.Core.Common.Serialization
             }
 
             var result = new Cursor<T>();
+            string parentProperty = string.Empty;
             while (reader.Read())
             {
                 if (reader.TokenType == JsonTokenType.EndObject)
@@ -29,17 +30,19 @@ namespace DiscuitSharp.Core.Common.Serialization
                 {
                     var propertyName = reader.GetString();
                     reader.Read();  // Move to the value.
-
                     switch (propertyName)
                     {
                         case "posts":
                             result.Records = JsonSerializer.Deserialize<List<T>>(ref reader, options);
+                            parentProperty = "posts";
                             break;
                         case "comments":
                             result.Records = JsonSerializer.Deserialize<List<T>>(ref reader, options);
                             break;
                         case "next":
-                            result.Next = reader.GetString();
+                            result.Next = (parentProperty == "posts") 
+                                ? reader.GetInt64().ToString()
+                                : reader.GetString();
                             break;
                         default:
                             throw new JsonException($"Property {propertyName} is not expected.");
