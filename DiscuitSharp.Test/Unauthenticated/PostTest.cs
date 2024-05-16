@@ -172,6 +172,8 @@ namespace DiscuitSharp.Test.Unauthenticated
             Assert.Equal(1, post.NoComments);
         }
     
+
+
         [Fact]
         public async Task GetPosts_DefaultRequest_ReturnPosts()
         {
@@ -180,7 +182,7 @@ namespace DiscuitSharp.Test.Unauthenticated
             (IEnumerable<Post>? posts, string? next) = await client.GetPosts();
             Assert.NotNull(posts);
             Assert.NotNull(next);
-            Assert.Equal("17692e122def73f25bd757e0", next);
+            Assert.Equal("1715874445000000000", next);
 
             Assert.Collection(posts,
           post =>
@@ -202,6 +204,37 @@ namespace DiscuitSharp.Test.Unauthenticated
               Assert.Equal("2023-09-29T12:06:18Z", post.LastActivityAt.ToString("yyyy-MM-ddTHH:mm:ssZ"));
           });
         }
+        
+        [Fact]
+        public async Task GetPosts_AllFeedSortedActivity_ReturnPosts()
+        {
+            var client = await clientTask;
+
+            var cursor = await client.GetPosts(feed: Feed.All, sort: Sort.Activity);
+            Assert.NotNull(cursor.Records);
+            Assert.NotNull(cursor.Next);
+            Assert.Equal("1715875936000000000", cursor.Next);
+
+            Assert.Collection(cursor.Records,
+          post =>
+          {
+              Assert.Equal("a6a945f8-fac7-441d-a170-937870d03605", post.Id.ToString());
+              Assert.Equal(Post.Kind.Text, post.Type);
+              Assert.Equal(new("P3T4GERf"), post.PublicId);
+              Assert.Equal("Home Title 1", post.Title);
+              Assert.Equal("2024-03-07T01:06:18Z", post.CreatedAt.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+              Assert.Equal("2024-03-07T07:06:18Z", post.LastActivityAt.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+          },
+          post =>
+          {
+              Assert.Equal("d612b7c1-16fd-4a7d-a7c1-665d2871af21", post.Id.ToString());
+              Assert.Equal(Post.Kind.Text, post.Type);
+              Assert.Equal(new("9l5Om_AV"), post.PublicId);
+              Assert.Equal("Home Title 2", post.Title);
+              Assert.Equal("2023-09-29T08:06:18Z", post.CreatedAt.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+              Assert.Equal("2023-09-29T12:06:18Z", post.LastActivityAt.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+          });
+        }
 
         [Fact]
         public async Task GetPosts_HomeFeed_ReturnPosts()
@@ -211,7 +244,7 @@ namespace DiscuitSharp.Test.Unauthenticated
             (var posts, string next) = await client.GetPosts(feed: Feed.Home);
             Assert.NotNull(posts);
             Assert.NotNull(next);
-            Assert.Equal("17692e122def73f25bd757e0", next);
+            Assert.Equal("1715874445000000000", next);
 
             Assert.Collection(posts,
           post =>
@@ -242,7 +275,7 @@ namespace DiscuitSharp.Test.Unauthenticated
             (var posts, string next) = await client.GetPosts(feed: Feed.Home, sort: Sort.Hot);
             Assert.NotNull(posts);
             Assert.NotNull(next);
-            Assert.Equal("17692e122def73f25bd757e0", next);
+            Assert.Equal("1715874445000000000", next);
 
             Assert.Collection(posts,
           post =>
@@ -274,7 +307,7 @@ namespace DiscuitSharp.Test.Unauthenticated
 
             Assert.NotNull(posts);
             Assert.NotNull(next);
-            Assert.Equal("hh34jdf500dfsdf2qiimj", next);
+            Assert.Equal("1715874445000000000", next);
             Assert.All(posts, (post) =>
                         {
                             Assert.NotNull(post.Community);
@@ -292,7 +325,7 @@ namespace DiscuitSharp.Test.Unauthenticated
             
             Assert.NotNull(posts);
             Assert.NotNull(next);
-            Assert.Equal("hh34jdf500dfsdf2qiimj", next);
+            Assert.Equal("1715874445000000000", next);
             
             Assert.Collection(posts,
                 (post ) =>
@@ -345,7 +378,7 @@ namespace DiscuitSharp.Test.Unauthenticated
             (var posts, string next) = await client.GetPosts(limit: 1);
             Assert.NotNull(posts);
             Assert.NotNull(next);
-            Assert.Equal("17692e122def73f25bd757e0", next);
+            Assert.Equal("1715874445000000000", next);
 
             Assert.Collection<Post>(posts, post =>
             {
@@ -378,7 +411,7 @@ namespace DiscuitSharp.Test.Unauthenticated
             (List<Post>? posts, string? next) = await client.GetPosts(cursor: cursor);
             Assert.NotNull(posts);
             Assert.NotNull(next);
-            Assert.Equal("6146d6ba09fd32c01816a09fd32c", next);
+            Assert.Equal("1715874445000000000", next);
 
             Assert.Collection<Post>(posts.Take(1), post =>
             {
@@ -412,7 +445,7 @@ namespace DiscuitSharp.Test.Unauthenticated
 
             Assert.NotNull(cursor.Records);
             Assert.NotNull(cursor.Next);
-            Assert.Equal("6146d6ba09fd32c01816a09fd32c", cursor.Next);
+            Assert.Equal("1715874445000000000", cursor.Next);
         }
 
         [Fact]
