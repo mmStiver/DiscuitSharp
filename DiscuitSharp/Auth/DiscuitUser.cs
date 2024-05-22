@@ -11,8 +11,8 @@ namespace DiscuitSharp.Core.Auth
 {
     public class DiscuitUser
     {
-        [JsonConverter(typeof(PostIdJsonConverter))]
-        public PostId? Id { get; init; }
+        [JsonConverter(typeof(UserIdJsonConverter))]
+        public UserId? Id { get; init; }
         public string? Username { get; init; }
         public string? Email { get; init; }
         public DateTime? EmailConfirmedAt { get; init; }
