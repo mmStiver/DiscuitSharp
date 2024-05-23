@@ -39,9 +39,9 @@ namespace DiscuitSharp.Test.Unauthenticated
             var client = await discClentTask;
             PublicPostId PostId = new("G7YMijpa");
 
-            (var comments, _) = await client.GetComments(PostId);
-            Assert.NotNull(comments);
-            Assert.Single(comments);
+            var cursor = await client.GetComments(PostId);
+            Assert.NotNull(cursor?.Records);
+            Assert.Single(cursor.Records);
         }
 
         [Fact]
@@ -50,8 +50,9 @@ namespace DiscuitSharp.Test.Unauthenticated
             var client = await discClentTask;
             PublicPostId PostId = new("G7YMijpa");
 
-            Cursor<Comment?> cursor = await client.GetComments(PostId);
-            (var comments, var next) = cursor;
+            Cursor<Comment?>? cursor = await client.GetComments(PostId);
+            Assert.NotNull(cursor);
+            (var comments, var _) = cursor;
             Assert.NotNull(comments);
             var comment = comments.FirstOrDefault();
 
@@ -85,9 +86,11 @@ namespace DiscuitSharp.Test.Unauthenticated
             var client = await discClentTask;
             PublicPostId PostId = new("G7YMijpa");
 
-            (var _, string? next) = await client.GetComments(PostId);
-            Assert.NotNull(next);
-            Assert.Equal("2aa28ac7329270fff34f04a", next);
+            Cursor<Comment?>? cursor = await client.GetComments(PostId);
+            Assert.NotNull(cursor);
+            (var comments, var _) = cursor;
+            Assert.NotNull(cursor.Next);
+            Assert.Equal("2aa28ac7329270fff34f04a", cursor.Next);
         }
 
         [Fact]
@@ -97,9 +100,11 @@ namespace DiscuitSharp.Test.Unauthenticated
             PublicPostId PostId = new("G7YMijpa");
             CursorIndex? index = new("2aa28ac7329270fff34f04a");
 
-            (List<Comment?>? comments, string? next) = await client.GetComments(PostId, index);
-            Assert.NotNull(comments);
-            Assert.Null(next);
+            var cursor = await client.GetComments(PostId, index);
+            Assert.NotNull(cursor);
+            Assert.NotNull(cursor.Records);
+            var comments = cursor.Records;  
+            Assert.Null(cursor.Next);
             var comment = comments.FirstOrDefault();
             Assert.Collection(comments,
                 (comment) => {
@@ -126,7 +131,7 @@ namespace DiscuitSharp.Test.Unauthenticated
             Assert.NotNull(comments);
             Assert.Collection(comments,
                 (comment) => {
-                    Assert.Equal(new("17ce2ef6d1b02d8b15c2722c"), comment.Id);
+                    Assert.Equal(new("17ce2ef6d1b02d8b15c2722c"), comment!.Id);
                     Assert.Equal(new("[Hidden]"), comment.Username);
                     Assert.Equal(new("000000000000000000000000"), comment.UserId);
                     Assert.Equal("[Deleted comment]", comment.Body);
