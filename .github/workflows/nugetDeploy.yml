@@ -23,12 +23,15 @@ jobs:
         dotnet-version: 6.0.x
         
     - name: Restore dependencies
+      working-directory: DiscuitSharp
       run: dotnet restore
       
     - name: Build
+      working-directory: DiscuitSharp
       run: dotnet build --no-restore
       
     - name: Test
+      working-directory: DiscuitSharp
       run: dotnet test --no-build --verbosity normal
 
     - name: Get version from tag
