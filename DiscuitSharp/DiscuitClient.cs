@@ -357,6 +357,11 @@ namespace DiscuitSharp.Core
         /// <returns>The newly created text post, or null if the creation fails.</returns>
         public async Task<TextPost?> Create(TextPost post, CancellationToken Token = default)
         {
+            if (String.IsNullOrEmpty(post.Title))
+                throw new ArgumentException("Value cannot be empty.", "post.Title");
+            if (String.IsNullOrEmpty(post.Body))
+                throw new ArgumentException("Value cannot be empty.", "post.Body");
+
             var options = new JsonSerializerOptions { PropertyNamingPolicy = new LowercaseNamingPolicy() };
 
             var body = JsonSerializer.Serialize(new { type = post.Type.Description(), title = post.Title, body = post.Body, community = post.CommunityName }, options);
@@ -373,6 +378,10 @@ namespace DiscuitSharp.Core
         /// <returns>The newly created link post, or null if the creation fails.</returns>
         public async Task<LinkPost?> Create(LinkPost post, CancellationToken Token = default)
         {
+            ArgumentNullException.ThrowIfNull(post.Link, "post.Link");
+            if(String.IsNullOrEmpty(post.Title))
+                throw new ArgumentException("Value cannot be empty.", "post.Title");
+            
             var options = new JsonSerializerOptions { PropertyNamingPolicy = new LowercaseNamingPolicy() };
 
             var body = JsonSerializer.Serialize(new { type = post.Type.Description(), title = post.Title, url = post.Link.Url, community = post.CommunityName }, options);
@@ -389,6 +398,10 @@ namespace DiscuitSharp.Core
         /// <returns>The newly created image post, or null if the creation fails.</returns>
         public async Task<ImagePost?> Create(ImagePost post, CancellationToken Token = default)
         {
+            ArgumentNullException.ThrowIfNull(post.Image, "post.Link");
+            if (String.IsNullOrEmpty(post.Title))
+                throw new ArgumentException("Value cannot be empty.", "post.Title");
+
             var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
             var body = JsonSerializer.Serialize(new { type = post.Type.Description(), title = post.Title, community = post.CommunityName, ImageId = post.Image.Id }, options);

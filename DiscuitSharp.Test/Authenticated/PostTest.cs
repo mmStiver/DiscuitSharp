@@ -127,19 +127,6 @@ namespace DiscuitSharp.Test.Authenticated
         }
 
         [Fact] public async Task 
-        CreatePost_SubmitTextPostWithoutTitle_InernalServerException()
-        {
-            var client = await discClentTask;
-
-            TextPost newPost = new(String.Empty, String.Empty, String.Empty);
-
-            Task<TextPost?> act() => client.Create(newPost);
-
-            var exception = await Assert.ThrowsAsync<APIRequestException>(act);
-            Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
-        }
-
-        [Fact] public async Task 
         CreatePost_SubmitTextPost_ReturnNewlyCreatedPost()
         {
             var client = await discClentTask;
@@ -211,6 +198,67 @@ namespace DiscuitSharp.Test.Authenticated
             }
         }
 
+        [Fact]
+        public async Task
+        CreatePost_SubmitEmptyImagePost_ArgumentNullException()
+        {
+            var client = await discClentTask;
+            ImagePost newPost = new() { Title = "First Image", CommunityName = "DiscuitMeta" };
+
+            Task<ImagePost?> act() => client.Create(newPost);
+
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(act);
+        }
+
+        [Fact]
+        public async Task
+        CreatePost_SubmitImagePostWithoutTitle_ArgumentException()
+        {
+            var client = await discClentTask;
+            Image newImage = new() { Id = "17c67e1be2b732bfd47" };
+            ImagePost newPost = new() { CommunityName = "DiscuitMeta", Image = newImage };
+
+            Task<ImagePost?> act() => client.Create(newPost);
+
+            var exception = await Assert.ThrowsAsync<ArgumentException>(act);
+        }
+
+        [Fact]
+        public async Task
+        CreatePost_SubmitEmptyLinkPost_ArgumentNullException()
+        {
+            var client = await discClentTask;
+            LinkPost newPost = new() { Title = "this title" };
+            Task<LinkPost?> act() => client.Create(newPost);
+
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(act);
+        }
+
+        [Fact]
+        public async Task
+        CreatePost_SubmitLinkPostWithoutTitle_ArgumentException()
+        {
+            var client = await discClentTask;
+            Link li = new Link("https://www.example.com/9iLxR1h2208", new Core.Media.Image());
+            LinkPost newPost = new() {  Link = li };
+
+            Task<LinkPost?> act() => client.Create(newPost);
+
+            var exception = await Assert.ThrowsAsync<ArgumentException>(act);
+        }
+        
+        [Fact]
+        public async Task
+        CreatePost_SubmitTextPostWithoutTitle_ArgumentException()
+        {
+            var client = await discClentTask;
+            TextPost newPost = new() { Body ="this here" };
+
+            Task<TextPost?> act() => client.Create(newPost);
+
+            var exception = await Assert.ThrowsAsync<ArgumentException>(act);
+        }
+        
         [Fact]
         public async Task
         UpdatePost_UnalteredPost_ReturnOriginalPost()
