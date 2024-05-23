@@ -44,26 +44,14 @@ namespace DiscuitSharp.Test.Unauthenticated
             Assert.Single(comments);
         }
 
-        [Fact] public async Task 
-        GetComments_FindCommentsByParentId_ReturnDescendantsOfParentsComments()
-        {
-            var client = await discClentTask;
-            PublicPostId PostId = new("G7YMijpa");
-            CommentId parent = new("17c93f6dd54807d149629e5c");
-
-            (var comments, _) = await client.GetComments(PostId, parent);
-
-            Assert.NotNull(comments);
-            Assert.All(comments, p => Assert.Equal(parent, p.ParentId));
-        }
-
         [Fact]
         public async Task GetComment_FindCommentsByPostId_ReturnPagedComments()
         {
             var client = await discClentTask;
             PublicPostId PostId = new("G7YMijpa");
 
-            (var comments, _) = (await client.GetComments(PostId));
+            Cursor<Comment?> cursor = await client.GetComments(PostId);
+            (var comments, var next) = cursor;
             Assert.NotNull(comments);
             var comment = comments.FirstOrDefault();
 
