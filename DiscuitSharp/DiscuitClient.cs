@@ -359,8 +359,6 @@ namespace DiscuitSharp.Core
         {
             if (String.IsNullOrEmpty(post.Title))
                 throw new ArgumentException("Value cannot be empty.", "post.Title");
-            if (String.IsNullOrEmpty(post.Body))
-                throw new ArgumentException("Value cannot be empty.", "post.Body");
 
             var options = new JsonSerializerOptions { PropertyNamingPolicy = new LowercaseNamingPolicy() };
 
