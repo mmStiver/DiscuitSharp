@@ -97,17 +97,17 @@ namespace DiscuitSharp.Test.Unauthenticated
             PublicPostId PostId = new("G7YMijpa");
             CursorIndex? index = new("2aa28ac7329270fff34f04a");
 
-            (List<Comment>? comments, string? next) = await client.GetComments(PostId, index);
+            (List<Comment?>? comments, string? next) = await client.GetComments(PostId, index);
             Assert.NotNull(comments);
             Assert.Null(next);
             var comment = comments.FirstOrDefault();
             Assert.Collection(comments,
                 (comment) => {
-                    Assert.Equal(new("0a6dc6d94e4c5ee2e024f33a"), comment.Id);
+                    Assert.Equal(new("0a6dc6d94e4c5ee2e024f33a"), comment!.Id);
                     Assert.Equal("nextpage Comment 1", comment.Body);
                 },
                 (comment) => {
-                    Assert.Equal(new("h9d9v0hgf445ff62dd2445"), comment.Id);
+                    Assert.Equal(new("h9d9v0hgf445ff62dd2445"), comment!.Id);
                     Assert.Equal("nextpage Comment 2", comment.Body);
                 }
                 );
