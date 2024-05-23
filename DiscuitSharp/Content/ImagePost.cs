@@ -8,9 +8,6 @@ namespace DiscuitSharp.Core.Content
 {
     public class ImagePost : Post
     {
-       // public Image? Image { get; set; }
-
-
         private Image? image;
         [JsonConverter(typeof(ImageConverter))]
         public Image? Image

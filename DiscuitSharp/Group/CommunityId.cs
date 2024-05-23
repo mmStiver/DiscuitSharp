@@ -8,6 +8,6 @@ namespace DiscuitSharp.Core.Group
 {
     public record struct CommunityId(string Id)
     {
-        public override string ToString() { return Id; }
+        public override readonly string ToString() { return Id; }
     };
 }
