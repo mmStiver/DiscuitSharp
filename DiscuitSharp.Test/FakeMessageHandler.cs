@@ -12,14 +12,15 @@ namespace DiscuitSharp.Test
 {
     public class FakeMessageHandler : HttpClientHandler
     {
-        HttpStatusCode status;
         Func<Uri?, string, JsonObject?, (HttpStatusCode, string)> ResponseContent;
         public FakeMessageHandler(Func<Uri?, string, JsonObject?, (HttpStatusCode, string)> ResponseContent) {
             this.ResponseContent = ResponseContent;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
+        { 
+            if(cancellationToken.IsCancellationRequested)
+                throw new OperationCanceledException();
             HttpStatusCode code;
             string result;
             bool? hasToken = (request.Headers.TryGetValues("X-Csrf-Token", out var values)) ? values.Any() : false;
@@ -43,6 +44,8 @@ namespace DiscuitSharp.Test
             };
             response.Headers.Add("Set-Cookie", $"SID=e3M0qkV3XQY9xdK1mZzdScZv5RkSXY4JmfgH; Path=/; expires={DateTime.UtcNow.AddHours(1)}; HttpOnly; Secure;");
             response.Headers.Add("Set-Cookie", $"csrftoken=AfyarwcrgDsnrpVAHw2AUDM05xHOfv2yVXAC0wfWHFY=; Path=/");
+
+           
 
             return await Task.FromResult(response);
         }

@@ -23,7 +23,7 @@
     <PackageProjectUrl>https://github.com/mmStiver/DiscuitSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mmStiver/DiscuitSharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>Initial alpha release of DiscuitSharp.</PackageReleaseNotes>
+    <PackageReleaseNotes>Initial Beta release of DiscuitSharp.</PackageReleaseNotes>
 
     <PackageReadmeFile>README.md</PackageReadmeFile>
     

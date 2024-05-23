@@ -66,7 +66,7 @@ namespace DiscuitSharp.Test.Unauthenticated
             var client = context.CreateClient();
 
             var _ = await client.GetInitial();
-            Assert.NotNull(client.Token);
+            Assert.NotNull(client.CSRFtoken);
         }
     }
 }

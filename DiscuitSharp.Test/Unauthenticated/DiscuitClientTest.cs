@@ -14,7 +14,7 @@ namespace DiscuitSharp.Test.Unauthenticated
         [Fact]
         public void GetCookies_NoServerInteraction_LocalSessionAndTokenNotSet()
         {
-            Assert.Equal(string.Empty, client.Token);
+            Assert.Equal(string.Empty, client.CSRFtoken);
         }
     }
 }

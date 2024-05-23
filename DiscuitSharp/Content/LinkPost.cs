@@ -9,8 +9,6 @@ namespace DiscuitSharp.Core.Content
 {
     public class LinkPost : Post
     {
-        //public Link ? Link { get; init; }
-
         private Link? link;
         public Link? Link
         {

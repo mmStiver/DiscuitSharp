@@ -3,34 +3,37 @@ using System.Reflection;
 
 namespace DiscuitSharp.Core.Utility
 {
-    public static class Enum_Extentions
+    /// <summary>
+    /// Provides extension methods for enums.
+    /// </summary>
+    public static class Enum_Extensions
     {
-
-    public static string Description(this Enum value)
+        /// <summary>
+        /// Retrieves a description from an enum value. If the enum value is decorated with a DescriptionAttribute,
+        /// this method returns the description specified in that attribute. Otherwise, it returns the enum's name as a string.
+        /// </summary>
+        /// <param name="value">The enum value from which to retrieve the description.</param>
+        /// <returns>The description of the enum value if a DescriptionAttribute is applied; otherwise, the string representation of the enum value.</returns>
+        /// <remarks>
+        /// This method uses reflection to look up the DescriptionAttribute on the enum field. If no DescriptionAttribute is found,
+        /// the method defaults to returning the standard string representation of the enum value.
+        /// </remarks>
+        public static string Description(this Enum value)
         {
-            // Get the type of the enum
             Type type = value.GetType();
-    
-            // Get the field information for this enum value
-            string? name = Enum.GetName(type, value);
-            if (name != null)
+
+            if (Enum.GetName(type, value) is string name)
             {
-                FieldInfo? field = type.GetField(name);
-                if (field != null)
+                if (type.GetField(name) is FieldInfo field)
                 {
-                    DescriptionAttribute? attr =
-                        Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute))
-                        as DescriptionAttribute;
-                    if (attr != null)
+                    Attribute? attr = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));
+                    if (attr is DescriptionAttribute descAttr)
                     {
-                        return attr.Description;
+                        return descAttr.Description;
                     }
                 }
             }
-    
-            // If there's no description, just return the ToString of the enum
             return value.ToString();
         }
-    
     }
 }
