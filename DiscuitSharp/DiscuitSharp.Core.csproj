@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <PackageId>DiscuitSharp</PackageId>
-    <Version>0.1.0-beta.2</Version>
+    <Version>0.1.0-beta.3</Version>
     <Authors>Michael Stiver-Balla</Authors>
     <Company>Michael Stiver-Balla</Company>
     <Product>Discuit Sharp</Product>
