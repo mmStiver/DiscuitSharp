@@ -317,6 +317,25 @@ namespace DiscuitSharp.Test.Unauthenticated
         }
 
         [Fact]
+        public async Task GetPosts_FindNextPageByCommunityId_PostsFilteredForCommunityNextPage()
+        {
+            var client = await clientTask;
+            var id = new CommunityId("17692e122def73f25bd757e0");
+            var cursor = await client.GetPosts(id, "1715874445000000000");
+            Assert.NotNull(cursor);
+            (var posts, string? next) = cursor;
+
+            Assert.NotNull(posts);
+            Assert.NotNull(next);
+            Assert.Equal("", next);
+            Assert.All(posts, (post) =>
+            {
+                Assert.NotNull(post.Community);
+                Assert.Equal(new("192ejld4kjdldfd77e0"), post.Community.Id);
+                Assert.Equal("general", post.Community.Name);
+            });
+        } 
+        [Fact]
         public async Task GetPosts_FindByCommunityId_ReturnPosts()
         {
             var client = await clientTask;

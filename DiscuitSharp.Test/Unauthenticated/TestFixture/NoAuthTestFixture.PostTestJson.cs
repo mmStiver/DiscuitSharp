@@ -171,5 +171,26 @@ namespace DiscuitSharp.Test.Unauthenticated
              }
             ]
             """;
+
+        protected const string PostPageTwoByCommunityId = """
+            [
+              {
+                "id": "17a2ae34de8303dea3c54a72",
+                "type": "image",
+                "publicId": "wGXYeKnl",
+                "communityId": "192ejld4kjdldfd77e0",
+                "communityName": "general",
+                "title": "Title for an art Post",
+                "community":{
+                    "id": "17692e122def73f25bd757e0",
+                    "name": "general"
+                },
+                "image": {
+                  "id": "17a369be13ff8ac23bb8df3e",
+                  "format": "jpeg",
+                  "url": "/images/17a369be13ff8ac23bb8df3e.jpeg?sig=sIH6sk0WJDrsOkqcajQNoOk4ZwHZGWu0M_Aoy07e84I"
+                }
+            },
+        
     }
 }

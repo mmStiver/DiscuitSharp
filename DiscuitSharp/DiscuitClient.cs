@@ -305,11 +305,14 @@ namespace DiscuitSharp.Core
         /// <param name="limit">The maximum number of posts to retrieve, if specified.</param>
         /// <param name="Token">The cancellation token to monitor for cancellation requests. It allows the operation to be cancelled before completion.</param>
         /// <returns>A cursor-based paginated list of posts from the specified community.</returns>
-        public async Task<Cursor<Post>?> GetPosts(CommunityId Id, int? limit = null, CancellationToken Token = default)
+        public async Task<Cursor<Post>?> GetPosts(CommunityId Id, CursorIndex? cursor = null, int? limit = null, CancellationToken Token = default)
         {
             string endpoint = $"posts";
             NameValueCollection queryParams = new();
             queryParams.Add("CommunityId", Id.ToString());
+
+            if (cursor != null)
+                queryParams.Add("next", (string)cursor);
 
             if (limit != null)
                 queryParams.Add("limit", limit.ToString());
