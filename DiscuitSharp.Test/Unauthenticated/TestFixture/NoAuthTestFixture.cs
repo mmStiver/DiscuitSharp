@@ -41,7 +41,7 @@ namespace DiscuitSharp.Test.Unauthenticated
                  { PathAndQuery: "/api/posts?feed=all&sort=activity", Method: "GET" } => (HttpStatusCode.OK, $"{{\"posts\":{FakeHttpTestFixture.HomePosts},\"next\":1715875936000000000 }}"),
                  { PathAndQuery: "/api/posts?feed=home&sort=hot", Method: "GET" } => (HttpStatusCode.OK, $"{{\"posts\":{FakeHttpTestFixture.HomePosts},\"next\":1715874445000000000}}"),
                  { PathAndQuery: "/api/posts?CommunityId=17692e122def73f25bd757e0", Method: "GET" } => (HttpStatusCode.OK, $"{{\"posts\":{PostsFeedByCommunity},\"next\":1715874445000000000}}"),
-                 { PathAndQuery: "/api/posts?CommunityId=17692e122def73f25bd757e0&next=1715874445000000000", Method: "GET" } => (HttpStatusCode.OK, $"{{\"posts\":{PostsFeedByCommunity},\"next\":1715874445000000000}}"),
+                 { PathAndQuery: "/api/posts?CommunityId=192ejld4kjdldfd77e0&next=1715874445000000000&limit=1", Method: "GET" } => (HttpStatusCode.OK, $"{{\"posts\":{PostPageTwoByCommunityId},\"next\":17306789341774}}"),
                  { PathAndQuery: "/api/posts?limit=1", Method: "GET" } => (HttpStatusCode.OK, $"{{\"posts\":[{ImagePost}],\"next\":1715874445000000000}}"),
                  { PathAndQuery: "/api/posts?next=17692e122def73f25bd757e0", Method: "GET" } => (HttpStatusCode.OK, $"{{\"posts\":[{ImagePost}],\"next\":1715874445000000000}}"),
 
