@@ -171,5 +171,22 @@ namespace DiscuitSharp.Test.Unauthenticated
              }
             ]
             """;
+
+        protected const string PostPageTwoByCommunityId = """
+            [
+              {
+                "id": "177aecc7e4f97bf1381b4d42177aecc7e4f97bf1381b4d42",
+                "type": "image",
+                "publicId": "wGXYeKnl",
+                "communityId": "192ejld4kjdldfd77e0",
+                "communityName": "general",
+                "title": "Title for an art Post",
+                "community":{
+                    "id": "192ejld4kjdldfd77e0",
+                    "name": "general"
+                }
+            }
+            ]
+        """;
     }
 }
