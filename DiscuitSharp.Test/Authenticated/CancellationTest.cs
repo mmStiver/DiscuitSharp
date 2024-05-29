@@ -50,7 +50,7 @@ namespace DiscuitSharp.Test.Authenticated
             var client = await clientTask;
             CancellationToken ct = cts.Token;
 
-            Task<TextPost?> act() => client.Create(new TextPost(), ct);
+            Task<TextPost?> act() => client.Create(new TextPost() {  Title = "Tit" , Body = "bdy"}, ct);
             cts.Cancel();
             var exception = await Assert.ThrowsAsync<TaskCanceledException>(act);
         }

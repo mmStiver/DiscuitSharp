@@ -15,6 +15,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json;
 using DiscuitSharp.Core.Utils;
 using DiscuitSharp.Core.Utility;
+using DiscuitSharp.Core.Common;
 
 namespace DiscuitSharp.Test.Unauthenticated
 {
@@ -179,7 +180,9 @@ namespace DiscuitSharp.Test.Unauthenticated
         {
             var client = await clientTask;
 
-            (IEnumerable<Post>? posts, string? next) = await client.GetPosts();
+            var cursor = await client.GetPosts();
+            Assert.NotNull(cursor);
+            (IEnumerable<Post>? posts, string? next) = cursor;
             Assert.NotNull(posts);
             Assert.NotNull(next);
             Assert.Equal("1715874445000000000", next);
@@ -211,6 +214,7 @@ namespace DiscuitSharp.Test.Unauthenticated
             var client = await clientTask;
 
             var cursor = await client.GetPosts(feed: Feed.All, sort: Sort.Activity);
+            Assert.NotNull(cursor);
             Assert.NotNull(cursor.Records);
             Assert.NotNull(cursor.Next);
             Assert.Equal("1715875936000000000", cursor.Next);
@@ -241,12 +245,13 @@ namespace DiscuitSharp.Test.Unauthenticated
         {
             var client = await clientTask;
 
-            (var posts, string next) = await client.GetPosts(feed: Feed.Home);
-            Assert.NotNull(posts);
-            Assert.NotNull(next);
-            Assert.Equal("1715874445000000000", next);
+            var cursor = await client.GetPosts(feed: Feed.Home);
+            Assert.NotNull(cursor);
+            Assert.NotNull(cursor.Records);
+            Assert.NotNull(cursor.Next);
+            Assert.Equal("1715874445000000000", cursor.Next);
 
-            Assert.Collection(posts,
+            Assert.Collection(cursor.Records,
           post =>
           {
               Assert.Equal("a6a945f8-fac7-441d-a170-937870d03605", post.Id.ToString());
@@ -272,12 +277,13 @@ namespace DiscuitSharp.Test.Unauthenticated
         {
             var client = await clientTask;
 
-            (var posts, string next) = await client.GetPosts(feed: Feed.Home, sort: Sort.Hot);
-            Assert.NotNull(posts);
-            Assert.NotNull(next);
-            Assert.Equal("1715874445000000000", next);
+            var cursor = await client.GetPosts(feed: Feed.Home, sort: Sort.Hot);
+            Assert.NotNull(cursor);
+            Assert.NotNull(cursor.Records);
+            Assert.NotNull(cursor.Next);
+            Assert.Equal("1715874445000000000", cursor.Next);
 
-            Assert.Collection(posts,
+            Assert.Collection(cursor.Records,
           post =>
           {
               Assert.Equal("a6a945f8-fac7-441d-a170-937870d03605", post.Id.ToString());
@@ -303,7 +309,9 @@ namespace DiscuitSharp.Test.Unauthenticated
         {
             var client = await clientTask;
             var id = new CommunityId("17692e122def73f25bd757e0");
-            (var posts, string? next) = await client.GetPosts(id);
+            var cursor = await client.GetPosts(id);
+            Assert.NotNull(cursor);
+            (IEnumerable<Post>? posts, string? next) = cursor;
 
             Assert.NotNull(posts);
             Assert.NotNull(next);
@@ -341,8 +349,11 @@ namespace DiscuitSharp.Test.Unauthenticated
         {
             var client = await clientTask;
             var id = new CommunityId("17692e122def73f25bd757e0");
-            (var posts, string? next) = await client.GetPosts(id);
-            
+
+            var cursor = await client.GetPosts(id);
+
+            Assert.NotNull(cursor);
+            (List<Post>? posts, string? next) = cursor;
             Assert.NotNull(posts);
             Assert.NotNull(next);
             Assert.Equal("1715874445000000000", next);
@@ -395,12 +406,13 @@ namespace DiscuitSharp.Test.Unauthenticated
         {
             var client = await clientTask;
 
-            (var posts, string next) = await client.GetPosts(limit: 1);
-            Assert.NotNull(posts);
-            Assert.NotNull(next);
-            Assert.Equal("1715874445000000000", next);
+            var cursor = await client.GetPosts(limit: 1);
+            Assert.NotNull(cursor); 
+            Assert.NotNull(cursor.Records);
+            Assert.NotNull(cursor.Next);
+            Assert.Equal("1715874445000000000", cursor.Next);
 
-            Assert.Collection<Post>(posts, post =>
+            Assert.Collection<Post>(cursor.Records, post =>
             {
                 Assert.IsType<ImagePost>(post);
 
@@ -427,8 +439,10 @@ namespace DiscuitSharp.Test.Unauthenticated
         public async Task GetPosts_CursorRequests_ReturnPosts()
         {
             var client = await clientTask;
-            var cursor = new CursorIndex("17692e122def73f25bd757e0");
-            (List<Post>? posts, string? next) = await client.GetPosts(cursor: cursor);
+            var index = new CursorIndex("17692e122def73f25bd757e0");
+                var cursor = await client.GetPosts(cursor: index);
+            Assert.NotNull(cursor);
+            (List<Post>? posts, string? next) = cursor;
             Assert.NotNull(posts);
             Assert.NotNull(next);
             Assert.Equal("1715874445000000000", next);
@@ -462,7 +476,7 @@ namespace DiscuitSharp.Test.Unauthenticated
             var index = new CursorIndex("17692e122def73f25bd757e0");
 
             var cursor = await client.GetPosts(cursor: index);
-
+            Assert.NotNull(cursor);
             Assert.NotNull(cursor.Records);
             Assert.NotNull(cursor.Next);
             Assert.Equal("1715874445000000000", cursor.Next);

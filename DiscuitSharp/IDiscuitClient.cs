@@ -73,7 +73,7 @@ namespace DiscuitSharp.Core
         /// <param name="limit">The maximum number of posts to retrieve, optional.</param>
         /// <param name="Token">The cancellation token to monitor for cancellation requests. It allows the operation to be cancelled before completion.</param>
         /// <returns>A cursor-based list of posts.</returns>
-        Task<Cursor<Post>> GetPosts(CursorIndex? cursor = null, Feed? feed = null, Sort? sort = null, int? limit = null, CancellationToken Token = default);
+        Task<Cursor<Post>?> GetPosts(CursorIndex? cursor = null, Feed? feed = null, Sort? sort = null, int? limit = null, CancellationToken Token = default);
 
         /// <summary>
         /// Retrieves posts for a specific community by community ID.

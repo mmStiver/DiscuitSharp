@@ -74,7 +74,8 @@ namespace DiscuitSharp.Test.Unauthenticated
             CancellationTokenSource cts = new CancellationTokenSource();
             CancellationToken ct = cts.Token;
 
-            Task<Cursor<Post>> act() => client.GetPosts(null, null, null, null, ct);
+            Task<Cursor<Post>?> act() => client.GetPosts(null, null, null, null, ct);
+
             cts.Cancel();
             var exception = await Assert.ThrowsAsync<TaskCanceledException>(act);
         }
