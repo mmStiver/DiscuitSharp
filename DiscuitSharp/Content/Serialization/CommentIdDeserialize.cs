@@ -12,8 +12,8 @@ namespace DiscuitSharp.Core.Group.Serialization
             Type typeToConvert,
             JsonSerializerOptions options) {
                 var mid = reader.GetString();
-                    return new CommentId(mid);
-            }
+            return mid == null ? throw new JsonException() : new CommentId(mid);
+        }
 
         public override void Write(
             Utf8JsonWriter writer,

@@ -28,14 +28,17 @@ namespace DiscuitSharp.Core.Utils
             StringBuilder querystring = new();
             foreach (string? key in nvc.AllKeys)
             {
-                foreach (var value in nvc?.GetValues(key))
-                {
-                    if (!firstParameter)
+                if(key is string keyValue) { 
+                    string[]? allValues = nvc.GetValues(keyValue);
+                    foreach (string? value in allValues ?? Array.Empty<string>())
                     {
-                        querystring.Append("&");
+                        if (!firstParameter)
+                        {
+                            querystring.Append("&");
+                        }
+                        querystring.Append($"{Uri.EscapeDataString(key)}={Uri.EscapeDataString(value)}");
+                        firstParameter = false;
                     }
-                    querystring.Append($"{Uri.EscapeDataString(key)}={Uri.EscapeDataString(value)}");
-                    firstParameter = false;
                 }
             }
             return querystring.ToString();

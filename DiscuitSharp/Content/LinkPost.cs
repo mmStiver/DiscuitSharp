@@ -3,11 +3,12 @@ using DiscuitSharp.Core.Media;
 using DiscuitSharp.Core.Member;
 using DiscuitSharp.Core.Utility;
 using System;
+using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
 
 namespace DiscuitSharp.Core.Content
 {
-    public class LinkPost : Post
+    public class LinkPost : Post, IMutableState<Link>
     {
         private Link? link;
         public Link? Link
@@ -16,7 +17,8 @@ namespace DiscuitSharp.Core.Content
             set
             {
                 this.link = value;
-                base["link"] = value;
+                if (value != null)
+                    this["link"] = value;
             }
         }
 
@@ -30,7 +32,33 @@ namespace DiscuitSharp.Core.Content
             this.CommunityName = Community;
             this.Link = Link;
         }
-    }
 
-    
+    #region IMutableState
+
+        protected Link this[string key]
+        {
+            get
+            {
+                return
+                     (mutatedState.TryGetValue(key, out Link? value))
+                    ? value
+                    : throw new KeyNotFoundException();
+            }
+            set
+            {
+                if (mutatedState.ContainsKey(key))
+                    mutatedState[key] = value;
+            }
+        }
+
+        private Dictionary<string, Link> mutatedState = new();
+        public ReadOnlyDictionary<string, Link> MutatedState
+        {
+            get
+            {
+                return new(this.mutatedState);
+            }
+        }
+    #endregion
+    }
 }

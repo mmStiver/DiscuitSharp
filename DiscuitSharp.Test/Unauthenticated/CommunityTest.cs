@@ -175,7 +175,7 @@ namespace DiscuitSharp.Test.Unauthenticated
 
             var communities = await client.GetCommunities("ask", QueryParams.Default);
             Assert.NotNull(communities);
-            var found = communities.Where(c => c.Name.ToLower().Contains("ask"));
+            var found = communities.Where(c => c.Name!.ToLower().Contains("ask"));
             Assert.Equal(2, communities.Count());
         }
     

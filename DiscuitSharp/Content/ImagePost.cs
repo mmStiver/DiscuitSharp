@@ -2,12 +2,14 @@
 using DiscuitSharp.Core.Group.Serialization;
 using DiscuitSharp.Core.Media;
 using DiscuitSharp.Core.Utility;
+using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
 
 namespace DiscuitSharp.Core.Content
 {
-    public class ImagePost : Post
+    public class ImagePost : Post, IMutableState<string>
     {
+        
         private Image? image;
         [JsonConverter(typeof(ImageConverter))]
         public Image? Image
@@ -16,7 +18,8 @@ namespace DiscuitSharp.Core.Content
             set
             {
                 this.image = value;
-                base["imageId"] = value?.Id;
+                if(value != null && value.Id != null)
+                    this["imageId"] = value.Id;
             }
         }
 
@@ -32,5 +35,33 @@ namespace DiscuitSharp.Core.Content
             this.Community= new Community(CommunityName);
             this.Image = Image;
         }
+
+        #region IMutableState
+
+        protected string this[string key]
+        {
+            get
+            {
+                return
+                     (mutatedState.TryGetValue(key, out string? value))
+                    ?value
+                    : throw new KeyNotFoundException();
+            }
+            set
+            {
+                if (mutatedState.ContainsKey(key))
+                   mutatedState[key] = value;
+            }
+        }
+
+        private Dictionary<string, string> mutatedState = new();
+        public ReadOnlyDictionary<string, string> MutatedState
+        {
+            get
+            {
+                return new(this.mutatedState);
+            }
+        }
+        #endregion
     }
 }

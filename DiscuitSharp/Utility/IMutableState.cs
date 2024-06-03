@@ -9,6 +9,6 @@ namespace DiscuitSharp.Core.Utility
 {
     public interface IMutableState<TValue>
     {
-        public ReadOnlyDictionary<string, TValue?> MutatedState { get; }
+        public ReadOnlyDictionary<string, TValue> MutatedState { get; }
     }
 }

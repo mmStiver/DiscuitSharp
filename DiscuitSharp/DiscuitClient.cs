@@ -76,7 +76,7 @@ namespace DiscuitSharp.Core
         /// <returns>The initial setup data encapsulated in an Initial object, or null if unavailable.</returns>
         public async Task<Initial?> GetInitial(CancellationToken Token = default)
         {
-            var httpResponseMessage = await client.GetAsync("_initial", Token);
+            var httpResponseMessage = await client.GetAsync("_initial", Token).ConfigureAwait(false);
             httpResponseMessage.EnsureSuccessStatusCode();
             if (httpResponseMessage.Headers != null)
                 StoreResponseHeader(httpResponseMessage.Headers);
@@ -454,7 +454,12 @@ namespace DiscuitSharp.Core
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
 
-            var body = SerializeMutableState(post, options);
+            string body = post switch {
+                TextPost tp => SerializeMutableState<string>(tp, options),
+                ImagePost ip => SerializeMutableState<string>(ip, options),
+                LinkPost lp => SerializeMutableState<Link>(lp, options),
+                _ => throw new Exception()
+            };
 
             var strContent = new StringContent(body, Encoding.UTF8, "application/json");
             return await Send<Post?>(HttpMethod.Put, $"posts/{post.PublicId}", strContent, Token);
