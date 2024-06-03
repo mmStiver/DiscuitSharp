@@ -8,15 +8,15 @@ namespace DiscuitSharp.Core.Content
 {
     public class TextPost : Post, IMutableState<string>
     {
-        private string? body = string.Empty;
+        private string? body = null;
         public string? Body
         {
             get { return this.body; }
             set
             {
+                if (this.body != null && value != null)
+                    this["Body"] = value;
                 this.body = value;
-                if (value != null)
-                    this["body"] = value;
             }
         }
 
@@ -26,7 +26,7 @@ namespace DiscuitSharp.Core.Content
                 : base(Title, Community)
         {
             this.Type = Post.Kind.Text;
-            this.Body = Body;
+            this.body = Body;
         }
 
         #region IMutableState
@@ -36,9 +36,9 @@ namespace DiscuitSharp.Core.Content
             get { return base.Title; }
             set
             {
-                this.Title = value;
-                if (value != null)
-                    this["body"] = value;
+                if (base.Title != null && value != null)
+                    this["Title"] = value;
+                base.Title = value;
             }
         }
 
@@ -55,6 +55,7 @@ namespace DiscuitSharp.Core.Content
             {
                 if (mutatedState.ContainsKey(key))
                     mutatedState[key] = value;
+                else mutatedState.Add(key, value);
             }
         }
 

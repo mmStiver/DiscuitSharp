@@ -448,15 +448,11 @@ namespace DiscuitSharp.Core
         /// <returns>The updated post object, or null if the update fails.</returns>
         public async Task<Post?> Update(Post post, CancellationToken Token = default)
         {
-            var options = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            };
-
+           
             string body = post switch {
-                TextPost tp => SerializeMutableState<string>(tp, options),
-                ImagePost ip => SerializeMutableState<object>(ip, options),
-                LinkPost lp => SerializeMutableState<object>(lp, options),
+                TextPost tp => SerializeMutableState<string>(tp, defaultSerializationOptions),
+                ImagePost ip => SerializeMutableState<string>(ip, defaultSerializationOptions),
+                LinkPost lp => SerializeMutableState<string>(lp, defaultSerializationOptions),
                 _ => throw new Exception()
             };
 
@@ -593,43 +589,13 @@ namespace DiscuitSharp.Core
         public async Task<Comment?> Delete(PublicPostId postId, CommentId commentId, CancellationToken Token = default)
             => await Send<Comment?>(HttpMethod.Delete, $"posts/{postId.Value}/comments/{commentId.Value}", token: Token).ConfigureAwait(false);
 
+
         private string SerializeMutableState<T>(IMutableState<T> state, JsonSerializerOptions options, CancellationToken Token = default)
             => JsonSerializer.Serialize(state.MutatedState
                             .Where(kvp => kvp.Value != null && kvp.Value is string s ? !string.IsNullOrWhiteSpace(s) : true)
-                            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value), options);
-
-        private async Task<T?> Post<T>(string endpoint, string? contentBody = null, CancellationToken Token = default)
-        {
-            var request = new HttpRequestMessage(HttpMethod.Post, endpoint);
-
-            if (!String.IsNullOrEmpty(this.CSRFtoken))
-                request.Headers.Add("X-Csrf-Token", this.CSRFtoken);
-
-            if (contentBody != null)
-                request.Content = new StringContent(contentBody, Encoding.UTF8, "application/json");
-
-            var httpResponseMessage = await client.SendAsync(request).ConfigureAwait(false);
-            if (!httpResponseMessage.IsSuccessStatusCode)
-            {
-                APIError? errorBody = await httpResponseMessage.Content.ReadFromJsonAsync<APIError?>().ConfigureAwait(false);
-                if (errorBody != null)
-                {
-                    var exception = new APIRequestException(errorBody.Value, httpResponseMessage.StatusCode, httpResponseMessage.ReasonPhrase);
-                    throw exception;
-                }
-
-                httpResponseMessage.EnsureSuccessStatusCode();
-            }
-
-            var options = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            };
-            options.Converters.Add(new PostJsonConverter());
-            return await httpResponseMessage.Content.ReadFromJsonAsync<T>(options).ConfigureAwait(false);
-
-        }
-
+                            .ToDictionary(kvp => $"{(kvp.Key.Take(1).ToArray()[0].ToString().ToLower())}{new string(kvp.Key.Skip(1).ToArray())}", kvp => kvp.Value)
+                , options);
+   
         private async Task Send(HttpMethod method, string endpoint, StringContent? contentBody = null, CancellationToken Token = default)
         {
             var request = new HttpRequestMessage(method, endpoint);

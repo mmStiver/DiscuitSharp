@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace DiscuitSharp.Core.Content
 {
-    public class LinkPost : Post, IMutableState<object>
+    public class LinkPost : Post, IMutableState<string>
     {
         private Link? link;
         public Link? Link
@@ -16,9 +16,9 @@ namespace DiscuitSharp.Core.Content
             get { return this.link; }
             set
             {
+                if (this.link != null && value != null)
+                    this["Url"] = value.Url;
                 this.link = value;
-                if (value != null)
-                    this["link"] = value;
             }
         }
 
@@ -34,12 +34,12 @@ namespace DiscuitSharp.Core.Content
         }
 
         #region IMutableState
-        protected object this[string key]
+        protected string this[string key]
         {
             get
             {
                 return
-                     (mutatedState.TryGetValue(key, out object? value))
+                     (mutatedState.TryGetValue(key, out string? value))
                     ? value
                     : throw new KeyNotFoundException();
             }
@@ -47,6 +47,8 @@ namespace DiscuitSharp.Core.Content
             {
                 if (mutatedState.ContainsKey(key))
                     mutatedState[key] = value;
+                else mutatedState.Add(key, value);
+
             }
         }
         public new string? Title
@@ -54,14 +56,14 @@ namespace DiscuitSharp.Core.Content
             get { return base.Title; }
             set
             {
-                this.Title = value;
-                if (value != null)
+                if (base.Title != null && value != null)
                     this["Title"] = value;
+                base.Title = value;
             }
         }
 
-        private Dictionary<string, object> mutatedState = new();
-        public ReadOnlyDictionary<string, object> MutatedState
+        private Dictionary<string, string> mutatedState = new();
+        public ReadOnlyDictionary<string, string> MutatedState
         {
             get
             {

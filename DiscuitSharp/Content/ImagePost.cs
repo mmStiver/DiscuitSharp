@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace DiscuitSharp.Core.Content
 {
-    public class ImagePost : Post, IMutableState<object>
+    public class ImagePost : Post, IMutableState<string>
     {
         
         private Image? image;
@@ -17,9 +17,10 @@ namespace DiscuitSharp.Core.Content
             get { return this.image; }
             set
             {
+                if (this.image != null && value is Image img)
+                    if(img.Id is string id)
+                        this["ImageId"] = id;
                 this.image = value;
-                if(value != null && value.Id != null)
-                    this["imageId"] = value.Id;
             }
         }
 
@@ -42,18 +43,18 @@ namespace DiscuitSharp.Core.Content
             get { return base.Title; }
             set
             {
-                this.Title = value;
-                if (value != null)
+                if (base.Title != null && value != null)
                     this["Title"] = value;
+                base.Title = value;
             }
         }
 
-        protected object this[string key]
+        protected string this[string key]
         {
             get
             {
                 return
-                     (mutatedState.TryGetValue(key, out object? value))
+                     (mutatedState.TryGetValue(key, out string? value))
                     ?value
                     : throw new KeyNotFoundException();
             }
@@ -61,11 +62,13 @@ namespace DiscuitSharp.Core.Content
             {
                 if (mutatedState.ContainsKey(key))
                    mutatedState[key] = value;
+                else mutatedState.Add(key, value);
+
             }
         }
 
-        private Dictionary<string, object> mutatedState = new();
-        public ReadOnlyDictionary<string, object> MutatedState
+        private Dictionary<string, string> mutatedState = new();
+        public ReadOnlyDictionary<string, string> MutatedState
         {
             get
             {
