@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <PackageId>DiscuitSharp</PackageId>
-    <Version>0.1.0-beta.4</Version>
+    <Version>0.1.0-rc</Version>
     <Authors>Michael Stiver-Balla</Authors>
     <Company>Michael Stiver-Balla</Company>
     <Product>Discuit Sharp</Product>
@@ -24,7 +24,7 @@
     <PackageProjectUrl>https://github.com/mmStiver/DiscuitSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mmStiver/DiscuitSharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>Initial Beta release of DiscuitSharp.</PackageReleaseNotes>
+    <PackageReleaseNotes>Initial release of DiscuitSharp.</PackageReleaseNotes>
 
     <PackageReadmeFile>README.md</PackageReadmeFile>
     
