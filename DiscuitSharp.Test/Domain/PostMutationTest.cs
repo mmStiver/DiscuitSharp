@@ -79,9 +79,8 @@ namespace DiscuitSharp.Test.Domain
 
             var dict = post.MutatedState;
             Assert.Equal("Set me title", dict["Title"]);
-            object dictVal = dict["Link"];
-            Assert.IsType<Link>(dictVal);
-            Assert.Equal("https://example.com", (dictVal as Link)!.Url);
+            object dictVal = dict["Url"];
+            Assert.Equal("https://example.com", dictVal);
         }
 
         [Fact]
@@ -116,9 +115,8 @@ namespace DiscuitSharp.Test.Domain
 
             var dict = post.MutatedState;
             Assert.Equal("Set me title", dict["Title"]);
-            object dictVal = dict["Image"];
-            Assert.IsType<Image>(dictVal);
-            Assert.Equal("11232323", (dictVal as Image)!.Id);
+            object dictVal = dict["ImageId"];
+            Assert.Equal("11232323", dictVal);
         }
     }
 }
