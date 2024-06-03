@@ -47,23 +47,23 @@ namespace DiscuitSharp.Core.Content
         public bool? UserVoted { get; init; }
         public bool? UserVotedUp { get; init; }
 
-        private Dictionary<string, string?> mutatedState = new();
-        public ReadOnlyDictionary<string, string?> MutatedState { get => new(mutatedState); }
+        private Dictionary<string, string> mutatedState = new();
+        public ReadOnlyDictionary<string, string> MutatedState { get => new(mutatedState); }
         public bool ContentStripped { get; init; }
 
-        private string? this[string key]
+        private string this[string key]
         {
             get
             {
-                if (mutatedState.TryGetValue(key, out string? value))
-                    return value?.ToString() ?? String.Empty;
-                return null;
+                return
+                     (mutatedState.TryGetValue(key, out string? value))
+                    ? value
+                    : throw new KeyNotFoundException();
             }
             set
             {
-                if (!mutatedState.ContainsKey(key))
-                    mutatedState.Add(key, String.Empty);
-                mutatedState[key] = value;
+                if (mutatedState.ContainsKey(key))
+                    mutatedState[key] = value;
             }
         }
 

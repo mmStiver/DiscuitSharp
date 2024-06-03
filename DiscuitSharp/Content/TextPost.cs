@@ -42,8 +42,6 @@ namespace DiscuitSharp.Core.Content
             }
         }
 
-
-
         protected string this[string key]
         {
             get

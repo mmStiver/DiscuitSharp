@@ -24,7 +24,7 @@ namespace DiscuitSharp.Core.Content
         public Community? Community { get; init; }
 
         public string? CommunityName { get; init; }
-        public string? Title {  get; protected set; }
+        public string? Title {  get; set; }
         public bool Locked { get; init; }
         public string? LockedBy { get; init; }
         public DateTime? LockedAt { get; init; }

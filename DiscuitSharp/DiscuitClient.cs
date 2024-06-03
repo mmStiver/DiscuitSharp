@@ -76,7 +76,7 @@ namespace DiscuitSharp.Core
         /// <returns>The initial setup data encapsulated in an Initial object, or null if unavailable.</returns>
         public async Task<Initial?> GetInitial(CancellationToken Token = default)
         {
-            var httpResponseMessage = await client.GetAsync("_initial", Token).ConfigureAwait(false);
+            var httpResponseMessage = await client.GetAsync("_initial", Token);
             httpResponseMessage.EnsureSuccessStatusCode();
             if (httpResponseMessage.Headers != null)
                 StoreResponseHeader(httpResponseMessage.Headers);
@@ -98,7 +98,7 @@ namespace DiscuitSharp.Core
             var body = JsonSerializer.Serialize(creds, options);
             var content = new StringContent(body, Encoding.UTF8, "application/json");
 
-            return await Send<DiscuitUser?>(HttpMethod.Post, "_login", content, Token);
+            return await Send<DiscuitUser?>(HttpMethod.Post, "_login", content, Token).ConfigureAwait(false);
 
         }
 
@@ -129,10 +129,10 @@ namespace DiscuitSharp.Core
             {
                 PropertyNamingPolicy = new LowercaseNamingPolicy(),
             };
-            var httpResponseMessage = await client.SendAsync(request, Token);
+            var httpResponseMessage = await client.SendAsync(request, Token).ConfigureAwait(false);
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                APIError? errorBody = await httpResponseMessage.Content.ReadFromJsonAsync<APIError?>();
+                APIError? errorBody = await httpResponseMessage.Content.ReadFromJsonAsync<APIError?>().ConfigureAwait(false);
                 if (errorBody != null)
                 {
                     var exception = new APIRequestException(errorBody.Value, httpResponseMessage.StatusCode, httpResponseMessage.ReasonPhrase);
@@ -141,7 +141,7 @@ namespace DiscuitSharp.Core
 
                 httpResponseMessage.EnsureSuccessStatusCode();
             }
-            var content = await httpResponseMessage.Content.ReadFromJsonAsync<DiscuitUser?>();
+            var content = await httpResponseMessage.Content.ReadFromJsonAsync<DiscuitUser?>().ConfigureAwait(false);
             return content;
         }
 
@@ -160,10 +160,10 @@ namespace DiscuitSharp.Core
             {
                 PropertyNamingPolicy = new LowercaseNamingPolicy(),
             };
-            var httpResponseMessage = await client.SendAsync(request, Token);
+            var httpResponseMessage = await client.SendAsync(request, Token).ConfigureAwait(false);
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                APIError? errorBody = await httpResponseMessage.Content.ReadFromJsonAsync<APIError?>();
+                APIError? errorBody = await httpResponseMessage.Content.ReadFromJsonAsync<APIError?>().ConfigureAwait(false);
                 if (errorBody != null)
                 {
                     var exception = new APIRequestException(errorBody.Value, httpResponseMessage.StatusCode, httpResponseMessage.ReasonPhrase);
@@ -172,7 +172,7 @@ namespace DiscuitSharp.Core
 
                 httpResponseMessage.EnsureSuccessStatusCode();
             }
-            var content = await httpResponseMessage.Content.ReadFromJsonAsync<DiscuitUser?>();
+            var content = await httpResponseMessage.Content.ReadFromJsonAsync<DiscuitUser?>().ConfigureAwait(false);
             return content;
         }
 
@@ -184,7 +184,7 @@ namespace DiscuitSharp.Core
         public async Task<bool?> InvalidateAuth(CancellationToken Token = default)
         {
             StringContent? content = null;
-            await Send(HttpMethod.Post, "_login?action=logout", content, Token);
+            await Send(HttpMethod.Post, "_login?action=logout", content, Token).ConfigureAwait(false);
             this.CSRFtoken = String.Empty;
             return true;
         }
@@ -195,7 +195,7 @@ namespace DiscuitSharp.Core
         /// <param name="Token">The cancellation token to monitor for cancellation requests. It allows the operation to be cancelled before completion.</param>
         /// <returns>A collection of communities, or null if none are available.</returns>
         public async Task<IEnumerable<Community>?> GetCommunities(CancellationToken Token = default)
-            => await GetCommunities(null, null, Token);
+            => await GetCommunities(null, null, Token).ConfigureAwait(false);
 
         /// <summary>
         /// Retrieves communities from the Discuit API based on specified query parameters.
@@ -204,7 +204,7 @@ namespace DiscuitSharp.Core
         /// <param name="Token">The cancellation token to monitor for cancellation requests. It allows the operation to be cancelled before completion.</param>
         /// <returns>A collection of communities matching the query parameters, or null if none match.</returns>
         public async Task<IEnumerable<Community>?> GetCommunities(QueryParams Set, CancellationToken Token = default)
-           => await GetCommunities(null, Set, Token);
+           => await GetCommunities(null, Set, Token).ConfigureAwait(false);
 
         /// <summary>
         /// Retrieves communities from the Discuit API based on a search query.
@@ -213,7 +213,7 @@ namespace DiscuitSharp.Core
         /// <param name="Token">The cancellation token to monitor for cancellation requests. It allows the operation to be cancelled before completion.</param>
         /// <returns>A collection of communities matching the search query, or null if none match.</returns>
         public async Task<IEnumerable<Community>?> GetCommunities(string searchQuery, CancellationToken Token = default)
-          => await GetCommunities(searchQuery, null, Token);
+          => await GetCommunities(searchQuery, null, Token).ConfigureAwait(false);
 
         /// <summary>
         /// Retrieves communities from the Discuit API based on a search query and additional query parameters.
@@ -234,7 +234,7 @@ namespace DiscuitSharp.Core
             if (queryParams.Count > 0)
                 endpoint += "?" + queryParams.ToUriQuery();
 
-            return await Send<List<Community>?>(HttpMethod.Get, endpoint, Token);
+            return await Send<List<Community>?>(HttpMethod.Get, endpoint, Token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace DiscuitSharp.Core
         /// <param name="Token">The cancellation token to monitor for cancellation requests. It allows the operation to be cancelled before completion.</param>
         /// <returns>The community, or null if it is not found.</returns>
         public async Task<Community?> Get(CommunityId Id, CancellationToken Token = default)
-            => await Send<Community?>(HttpMethod.Get, $"communities/{Id.ToString()}", Token);
+            => await Send<Community?>(HttpMethod.Get, $"communities/{Id.ToString()}", Token).ConfigureAwait(false);
 
         /// <summary>
         /// Retrieves a specific community by name from the Discuit API.
@@ -253,7 +253,7 @@ namespace DiscuitSharp.Core
         /// <param name="Token">The cancellation token to monitor for cancellation requests. It allows the operation to be cancelled before completion.</param>
         /// <returns>The community, or null if it is not found.</returns>
         public async Task<Community?> GetCommunity(string Name, CancellationToken Token = default)
-            => await Send<Community?>(HttpMethod.Get, $"communities/{Name}?byName=true", Token);
+            => await Send<Community?>(HttpMethod.Get, $"communities/{Name}?byName=true", Token).ConfigureAwait(false);
 
         /// <summary>
         /// Retrieves a specific post by its ID from the Discuit API.
@@ -264,7 +264,7 @@ namespace DiscuitSharp.Core
         public async Task<Post?> Get(PublicPostId Id, CancellationToken Token = default)
         {
 
-            return await Send<Post>(HttpMethod.Get, $"posts/{Id.ToString()}", Token);
+            return await Send<Post>(HttpMethod.Get, $"posts/{Id.ToString()}", Token).ConfigureAwait(false);
             
            // var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
             //options.Converters.Add(new PostJsonConverter());
@@ -295,7 +295,7 @@ namespace DiscuitSharp.Core
             if (queryParams.Count > 0)
                 endpoint += "?" + queryParams.ToUriQuery();
 
-            return await Send<Cursor<Post>?>(HttpMethod.Get, endpoint, Token);
+            return await Send<Cursor<Post>?>(HttpMethod.Get, endpoint, Token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -320,7 +320,7 @@ namespace DiscuitSharp.Core
             if (queryParams.Count > 0)
                 endpoint += "?" + queryParams.ToUriQuery();
 
-            return await Send<Cursor<Post>?>(HttpMethod.Get, endpoint, Token);
+            return await Send<Cursor<Post>?>(HttpMethod.Get, endpoint, Token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -330,7 +330,7 @@ namespace DiscuitSharp.Core
         /// <param name="Token">The cancellation token to monitor for cancellation requests. It allows the operation to be cancelled before completion.</param>
         /// <returns>A cursor-based list of comments, or null if no comments are available.</returns>
         public async Task<Cursor<Comment?>?> GetComments(PublicPostId Id, CancellationToken Token = default)
-            => await GetComments(Id, null, Token);
+            => await GetComments(Id, null, Token).ConfigureAwait(false);
 
         /// <summary>
         /// Retrieves a cursor-based paginated list of comments for a specific post, potentially filtered by parent comment ID and with pagination.
@@ -349,7 +349,7 @@ namespace DiscuitSharp.Core
             if (queryParams.Count > 0)
                 endpoint += "?" + queryParams.ToUriQuery();
 
-            return await Send<Cursor<Comment?>?>(HttpMethod.Get, endpoint, Token);
+            return await Send<Cursor<Comment?>?>(HttpMethod.Get, endpoint, Token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -368,7 +368,7 @@ namespace DiscuitSharp.Core
             var body = JsonSerializer.Serialize(new { type = post.Type.Description(), title = post.Title, body = post.Body, community = post.CommunityName }, options);
             var strContent = new StringContent(body, Encoding.UTF8, "application/json");
 
-            return await Send<TextPost?>(HttpMethod.Post, "posts", strContent, Token);
+            return await Send<TextPost?>(HttpMethod.Post, "posts", strContent, Token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -388,7 +388,7 @@ namespace DiscuitSharp.Core
             var body = JsonSerializer.Serialize(new { type = post.Type.Description(), title = post.Title, url = post.Link.Url, community = post.CommunityName }, options);
             var strContent = new StringContent(body, Encoding.UTF8, "application/json");
 
-            return await Send<LinkPost?>(HttpMethod.Post, "posts", strContent, Token);
+            return await Send<LinkPost?>(HttpMethod.Post, "posts", strContent, Token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -419,9 +419,8 @@ namespace DiscuitSharp.Core
         /// <param name="comment">The comment to be created.</param>
         /// <param name="Token">The cancellation token to monitor for cancellation requests. It allows the operation to be cancelled before completion.</param>
         /// <returns>The newly created comment, or null if the creation fails.</returns>
-
         public async Task<Comment?> Create(PublicPostId postId, Comment comment, CancellationToken Token = default)
-            => await Create(postId, null, comment, Token);
+            => await Create(postId, null, comment, Token).ConfigureAwait(true);
 
         /// <summary>
         /// Creates a new comment on a specific post, optionally as a reply to an existing comment.
@@ -438,7 +437,7 @@ namespace DiscuitSharp.Core
                 : JsonSerializer.Serialize(new { body = comment.Body}, defaultSerializationOptions);
 
             var strContent = new StringContent(body, Encoding.UTF8, "application/json");
-            return await Send<Comment?>(HttpMethod.Post, $"posts/{postId.Value}/comments", strContent, Token);
+            return await Send<Comment?>(HttpMethod.Post, $"posts/{postId.Value}/comments", strContent, Token).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -456,13 +455,13 @@ namespace DiscuitSharp.Core
 
             string body = post switch {
                 TextPost tp => SerializeMutableState<string>(tp, options),
-                ImagePost ip => SerializeMutableState<string>(ip, options),
-                LinkPost lp => SerializeMutableState<Link>(lp, options),
+                ImagePost ip => SerializeMutableState<object>(ip, options),
+                LinkPost lp => SerializeMutableState<object>(lp, options),
                 _ => throw new Exception()
             };
 
             var strContent = new StringContent(body, Encoding.UTF8, "application/json");
-            return await Send<Post?>(HttpMethod.Put, $"posts/{post.PublicId}", strContent, Token);
+            return await Send<Post?>(HttpMethod.Put, $"posts/{post.PublicId}", strContent, Token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -503,7 +502,7 @@ namespace DiscuitSharp.Core
                 endpoint += "?" + queryParams.ToUriQuery();
 
 
-            return await Send<Post?>(HttpMethod.Put, endpoint, token: Token);
+            return await Send<Post?>(HttpMethod.Put, endpoint, token: Token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -522,7 +521,7 @@ namespace DiscuitSharp.Core
             var jsonBody = JsonSerializer.Serialize(new { postId = Vote.Id.Value, up = Vote.Vote }, options);
             StringContent content = new(jsonBody, Encoding.UTF8, "application/json");
             ;
-            return await Send<Post>(HttpMethod.Post, "_postVote", content, Token);
+            return await Send<Post>(HttpMethod.Post, "_postVote", content, Token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -542,7 +541,7 @@ namespace DiscuitSharp.Core
             var body = SerializeMutableState<string>(comment, options);
             var contentBody = new StringContent(body, Encoding.UTF8, "application/json");
 
-            return await Send<Comment?>(HttpMethod.Post, $"posts/{postId.Value}/comments", contentBody, Token);
+            return await Send<Comment?>(HttpMethod.Post, $"posts/{postId.Value}/comments", contentBody, Token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -560,7 +559,7 @@ namespace DiscuitSharp.Core
                 var jsonBody = JsonSerializer.Serialize(new { commentId = Vote.Id.Value, up = Vote.Vote }, options);
             StringContent content = new(jsonBody, Encoding.UTF8, "application/json");
             ;
-            return await Send<Comment?>(HttpMethod.Post, "_commentVote", content, Token);
+            return await Send<Comment?>(HttpMethod.Post, "_commentVote", content, Token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -580,7 +579,7 @@ namespace DiscuitSharp.Core
                     _ => $"posts/{postId.Value}?deleteAs=Normal"
                 }; 
             StringContent? sc = null;
-            await Send(method, endpoint, sc, Token);
+            await Send(method, endpoint, sc, Token).ConfigureAwait(false);
             return true;
         }
 
@@ -592,7 +591,7 @@ namespace DiscuitSharp.Core
         /// <param name="Token">The cancellation token to monitor for cancellation requests. It allows the operation to be cancelled before completion.</param>
         /// <returns>True if the deletion was successful, otherwise returns null.</returns>
         public async Task<Comment?> Delete(PublicPostId postId, CommentId commentId, CancellationToken Token = default)
-            => await Send<Comment?>(HttpMethod.Delete, $"posts/{postId.Value}/comments/{commentId.Value}", token: Token);
+            => await Send<Comment?>(HttpMethod.Delete, $"posts/{postId.Value}/comments/{commentId.Value}", token: Token).ConfigureAwait(false);
 
         private string SerializeMutableState<T>(IMutableState<T> state, JsonSerializerOptions options, CancellationToken Token = default)
             => JsonSerializer.Serialize(state.MutatedState
@@ -609,10 +608,10 @@ namespace DiscuitSharp.Core
             if (contentBody != null)
                 request.Content = new StringContent(contentBody, Encoding.UTF8, "application/json");
 
-            var httpResponseMessage = await client.SendAsync(request);
+            var httpResponseMessage = await client.SendAsync(request).ConfigureAwait(false);
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                APIError? errorBody = await httpResponseMessage.Content.ReadFromJsonAsync<APIError?>();
+                APIError? errorBody = await httpResponseMessage.Content.ReadFromJsonAsync<APIError?>().ConfigureAwait(false);
                 if (errorBody != null)
                 {
                     var exception = new APIRequestException(errorBody.Value, httpResponseMessage.StatusCode, httpResponseMessage.ReasonPhrase);
@@ -627,7 +626,7 @@ namespace DiscuitSharp.Core
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
             options.Converters.Add(new PostJsonConverter());
-            return await httpResponseMessage.Content.ReadFromJsonAsync<T>(options);
+            return await httpResponseMessage.Content.ReadFromJsonAsync<T>(options).ConfigureAwait(false);
 
         }
 
@@ -641,10 +640,10 @@ namespace DiscuitSharp.Core
             if (contentBody != null)
                 request.Content = contentBody;
 
-            var httpResponseMessage = await client.SendAsync(request, Token);
+            var httpResponseMessage = await client.SendAsync(request, Token).ConfigureAwait(false);
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                APIError? errorBody = await httpResponseMessage.Content.ReadFromJsonAsync<APIError?>(defaultSerializationOptions, Token);
+                APIError? errorBody = await httpResponseMessage.Content.ReadFromJsonAsync<APIError?>(defaultSerializationOptions, Token).ConfigureAwait(false);
                 if (errorBody != null)
                 {
                     var exception = new APIRequestException(errorBody.Value, httpResponseMessage.StatusCode, httpResponseMessage.ReasonPhrase);
@@ -656,7 +655,7 @@ namespace DiscuitSharp.Core
         }
 
         private async Task<T?> Send<T>(HttpMethod method, string endpoint, CancellationToken token = default)
-            => await Send<T>(method, endpoint, (StringContent?)null, token);
+            => await Send<T>(method, endpoint, (StringContent?)null, token).ConfigureAwait(false);
         private async Task<T?> Send<T>(HttpMethod method, string endpoint, StringContent? contentBody, CancellationToken token)
         {
             var request = new HttpRequestMessage(method, endpoint);
@@ -706,10 +705,10 @@ namespace DiscuitSharp.Core
             if (!String.IsNullOrEmpty(this.CSRFtoken))
                 request.Headers.Add("X-Csrf-Token", this.CSRFtoken);
 
-            var httpResponseMessage = await client.SendAsync(request);
+            var httpResponseMessage = await client.SendAsync(request).ConfigureAwait(false);
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                APIError? errorBody = await httpResponseMessage.Content.ReadFromJsonAsync<APIError?>();
+                APIError? errorBody = await httpResponseMessage.Content.ReadFromJsonAsync<APIError?>().ConfigureAwait(false);
                 if (errorBody != null)
                 {
                     var exception = new APIRequestException(errorBody.Value, httpResponseMessage.StatusCode, httpResponseMessage.ReasonPhrase);
@@ -724,7 +723,7 @@ namespace DiscuitSharp.Core
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
             options.Converters.Add(new PostJsonConverter());
-            return await httpResponseMessage.Content.ReadFromJsonAsync<T>(options);
+            return await httpResponseMessage.Content.ReadFromJsonAsync<T>(options).ConfigureAwait(false);
 
         }
 

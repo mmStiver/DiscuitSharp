@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace DiscuitSharp.Core.Content
 {
-    public class LinkPost : Post, IMutableState<Link>
+    public class LinkPost : Post, IMutableState<object>
     {
         private Link? link;
         public Link? Link
@@ -33,14 +33,13 @@ namespace DiscuitSharp.Core.Content
             this.Link = Link;
         }
 
-    #region IMutableState
-
-        protected Link this[string key]
+        #region IMutableState
+        protected object this[string key]
         {
             get
             {
                 return
-                     (mutatedState.TryGetValue(key, out Link? value))
+                     (mutatedState.TryGetValue(key, out object? value))
                     ? value
                     : throw new KeyNotFoundException();
             }
@@ -50,9 +49,19 @@ namespace DiscuitSharp.Core.Content
                     mutatedState[key] = value;
             }
         }
+        public new string? Title
+        {
+            get { return base.Title; }
+            set
+            {
+                this.Title = value;
+                if (value != null)
+                    this["Title"] = value;
+            }
+        }
 
-        private Dictionary<string, Link> mutatedState = new();
-        public ReadOnlyDictionary<string, Link> MutatedState
+        private Dictionary<string, object> mutatedState = new();
+        public ReadOnlyDictionary<string, object> MutatedState
         {
             get
             {
