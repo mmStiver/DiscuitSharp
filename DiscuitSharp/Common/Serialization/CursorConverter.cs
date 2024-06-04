@@ -40,9 +40,12 @@ namespace DiscuitSharp.Core.Common.Serialization
                             result.Records = JsonSerializer.Deserialize<List<T>>(ref reader, options);
                             break;
                         case "next":
-                            result.Next = (parentProperty == "posts") 
-                                ? reader.GetInt64().ToString()
-                                : reader.GetString();
+                            result.Next = 
+                                (String.Compare(reader.TokenType.ToString(), "Null", true) == 0)
+                                ? null
+                                : (String.Compare(reader.TokenType.ToString(), "string", true) == 0)
+                                    ? reader.GetString()
+                                    : reader.GetInt64().ToString();
                             break;
                         default:
                             throw new JsonException($"Property {propertyName} is not expected.");
