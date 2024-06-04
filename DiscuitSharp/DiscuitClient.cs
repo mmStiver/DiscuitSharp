@@ -309,7 +309,7 @@ namespace DiscuitSharp.Core
         {
             string endpoint = $"posts";
             NameValueCollection queryParams = new();
-            queryParams.Add("CommunityId", Id.ToString());
+            queryParams.Add("communityId", Id.ToString());
 
             if (cursor != null)
                 queryParams.Add("next", (string)cursor);
