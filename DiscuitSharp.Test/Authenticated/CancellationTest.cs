@@ -41,7 +41,7 @@ namespace DiscuitSharp.Test.Authenticated
 
             Task<DiscuitUser?> act() => client.GetAuthenticatedUser(ct);
             cts.Cancel();
-            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act);
+            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act).ConfigureAwait(false);
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace DiscuitSharp.Test.Authenticated
 
             Task<TextPost?> act() => client.Create(new TextPost() {  Title = "Tit" , Body = "bdy"}, ct);
             cts.Cancel();
-            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act);
+            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act).ConfigureAwait(false);
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace DiscuitSharp.Test.Authenticated
 
             Task<LinkPost?> act() => client.Create(lnk, ct);
             cts.Cancel();
-            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act);
+            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act).ConfigureAwait(false);
         }
 
         [Fact]
@@ -105,7 +105,7 @@ namespace DiscuitSharp.Test.Authenticated
 
             Task<bool?> act() => client.Delete(new PublicPostId(), null, ct);
             cts.Cancel();
-            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act);
+            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act).ConfigureAwait(false);
         }
 
         [Fact]
@@ -127,7 +127,7 @@ namespace DiscuitSharp.Test.Authenticated
 
             Task<Comment?> act() => client.Create(new PublicPostId(), new CommentId(), new Comment(), ct);
             cts.Cancel();
-            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act);
+            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act).ConfigureAwait(false);
         }
 
         [Fact]
@@ -138,7 +138,7 @@ namespace DiscuitSharp.Test.Authenticated
 
             Task<Comment?> act() => client.Delete(new PublicPostId(), new CommentId(), ct);
             cts.Cancel();
-            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act);
+            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act).ConfigureAwait(false);
         }
 
         [Fact]
@@ -149,7 +149,7 @@ namespace DiscuitSharp.Test.Authenticated
 
             Task<Post?> act() => client.Update(new TextPost(), ct);
             cts.Cancel();
-            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act);
+            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act).ConfigureAwait(false);
         }
 
         [Fact]
@@ -160,7 +160,7 @@ namespace DiscuitSharp.Test.Authenticated
 
             Task<Post?> act() => client.Update(new PostVote(new(""), true), ct);
             cts.Cancel();
-            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act);
+            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act).ConfigureAwait(false);
         }
 
         [Fact]
@@ -172,7 +172,7 @@ namespace DiscuitSharp.Test.Authenticated
 
             Task<Comment?> act() => client.Update(new PublicPostId("ffff"), cmt, ct);
             cts.Cancel();
-            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act);
+            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act).ConfigureAwait(false);
         }
 
         [Fact]
@@ -183,7 +183,7 @@ namespace DiscuitSharp.Test.Authenticated
 
             Task<Comment?> act() => client.Update(new CommentVote(new(""), true), ct);
             cts.Cancel();
-            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act);
+            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act).ConfigureAwait(false);
         }
 
         [Fact]
@@ -196,7 +196,7 @@ namespace DiscuitSharp.Test.Authenticated
             Task<Post?> act() => client.Update(Id, PostAction.Lock, Core.Common.UserGroup.Moderator, cts.Token);
             cts.Cancel();
 
-            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act);
+            var exception = await Assert.ThrowsAsync<TaskCanceledException>(act).ConfigureAwait(false);
         }
 
     }

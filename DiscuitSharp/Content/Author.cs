@@ -12,9 +12,9 @@ namespace DiscuitSharp.Core.Content
     {
         public string? Id { get; set; }
         public string? Username { get; set; }
-        public string Email { get; set; }
+        public string? Email { get; set; }
         public DateTime? EmailConfirmedAt { get; set; }
-        public string AboutMe { get; set; }
+        public string? AboutMe { get; set; }
         public int Points { get; set; }
         public bool IsAdmin { get; set; }
         public Image? ProPic { get; set; }

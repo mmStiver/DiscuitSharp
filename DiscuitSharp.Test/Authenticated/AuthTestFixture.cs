@@ -96,10 +96,10 @@ namespace DiscuitSharp.Test.Authenticated
                 { title: "updated title", body: "updated value", url: null, imageId: null } => (HttpStatusCode.OK, UpdateContent),
 
                 { title: null, body:null, url: "https://discuit.net/page", imageId: null } => (HttpStatusCode.OK, ReferenceLinkPostContent),
-                { title: null, body: null, url: "https://www.example.net/page", imageId: null } => (HttpStatusCode.OK, UpdateLinkPostContent),
+                { title: "Updated Link", body: null, url: "https://example.net/page", imageId: null } => (HttpStatusCode.OK, UpdateLinkPostContent),
 
                 { title: null, body: null, url: null, imageId: "0f92u3jfodslfj3" } => (HttpStatusCode.OK, ReferenceImagePostContent),
-                { title: null, body :null, url: null, imageId: "j09K8xasdsfYlkj3jf2" } => (HttpStatusCode.OK, UpdateImagePostContent),
+                { title: "Updated Image", body :null, url: null, imageId: "j09K8xasdsfYlkj3jf2" } => (HttpStatusCode.OK, UpdateImagePostContent),
 
                 _ => throw new Exception("unknown error")
             };
@@ -361,7 +361,7 @@ namespace DiscuitSharp.Test.Authenticated
               "type": "link",
               "publicId": "dfghfgh",
               "title": "original title",
-              "editedAt": "2024-04-15T19:45:32Z",
+              "editedAt": "2024-04-13T19:45:32Z",
               "body": null,
               "image": null,
               "link": {
@@ -376,11 +376,11 @@ namespace DiscuitSharp.Test.Authenticated
                 "id":"17c68636766fdade1af11c4d",
                 "type":"link",
                 "publicId":"dfghfgh",
-                "editedAt": "2024-04-17T12:05:11Z",
-            
+                "title":"Updated Link",
+                "editedAt": "2024-04-15T19:45:32Z",
                 "link": {
-                   url: "https://www.example.net/page",
-                   host: "www.example.net"
+                   "url": "https://example.net/page",
+                   "host": "www.example.net"
                 }
             }
             """;
@@ -408,7 +408,7 @@ namespace DiscuitSharp.Test.Authenticated
                 "type":"image",
                 "publicId":"vclkj85d",
                 "editedAt": "2024-04-17T12:05:11Z",
-            
+                "title":"Updated Image",
                 "image": {
                     "id": "j09K8xasdsfYlkj3jf2",
                     "url": "https://example.net/image2.jpg"

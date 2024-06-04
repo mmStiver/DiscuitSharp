@@ -283,49 +283,56 @@ namespace DiscuitSharp.Test.Authenticated
         UpdatePost_ModifyPostTitle_ReturnPostWithNewTitle()
         {
             var client = await discClentTask;
-            PublicPostId publicPostId = new("Rg8TkGaE");
-            var post = await client.Get(publicPostId);
-            post!.Title = "updated title";
+            TextPost txtPost = new()
+            {
+                Id = new("17c68bb8829688ba13844398"),
+                Type = Post.Kind.Text,
+                PublicId = new PublicPostId("Rg8TkGaE"),
+                Title = "original title",
+                Body = "Oh, Canada"
+            };
 
-            var updated = await client.Update(post);
+            txtPost.Title = "updated title";
+
+            var updated = await client.Update(txtPost);
 
             Assert.NotNull(updated);
             Assert.IsType<TextPost>(updated);
-            if (updated is TextPost txt)
-            {
-                Assert.Equal(post.Id, updated.Id);
-                Assert.Equal(post.Type, updated.Type);
-                Assert.Equal(post.PublicId, updated.PublicId);
-                Assert.Equal("updated title", txt.Title);
-                Assert.NotNull(updated.EditedAt);
-                Assert.Equal("2024-04-17T12:05:11Z", updated.EditedAt.Value.ToString("yyyy-MM-ddTHH:mm:ssZ"));
-            }
+            Assert.Equal(txtPost.Id, updated.Id);
+            Assert.Equal(txtPost.Type, updated.Type);
+            Assert.Equal(txtPost.PublicId, updated.PublicId);
+            Assert.Equal("updated title", updated.Title);
+            Assert.NotNull(updated.EditedAt);
+            Assert.Equal("2024-04-17T12:05:11Z", updated.EditedAt.Value.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+
         }
 
         [Fact] public async Task
-        UpdatePost_ModifyPostText_ReturnPostWithNewText()
+        UpdatePost_ModifyTextPostContent_ReturnPostWithNewText()
         {
             var client = await discClentTask;
-            PublicPostId publicPostId = new("Rg8TkGaE");
-            var post = await client.Get(publicPostId);
 
-            Assert.IsType<TextPost>(post);
-            if (post is TextPost txtPost)
+            TextPost txtPost = new () { 
+              Id = new( "17c68bb8829688ba13844398"),
+              Type = Post.Kind.Text,
+              PublicId = new PublicPostId("Rg8TkGaE"),
+              Title = "original title",
+              Body = "Oh, Canada"
+            };
+            
+            txtPost.Body = "updated value";
+            var updated = await client.Update(txtPost);
+
+            if (updated is TextPost updatedPost)
             {
-                txtPost.Body = "updated value";
-                var updated = await client.Update(post);
-
-                if (updated is TextPost updatedPost)
-                {
-                    Assert.NotNull(updatedPost);
-                    Assert.Equal(post.Id, updated.Id);
-                    Assert.Equal(post.Type, updated.Type);
-                    Assert.Equal(post.PublicId, updated.PublicId);
-                    Assert.Equal(post.Title, updated.Title);
-                    Assert.Equal("updated value", updatedPost.Body);
-                    Assert.NotNull(updated.EditedAt);
-                    Assert.Equal("2024-04-17T12:05:11Z", updated.EditedAt.Value.ToString("yyyy-MM-ddTHH:mm:ssZ"));
-                }
+                Assert.NotNull(updatedPost);
+                Assert.Equal(txtPost.Id, updated.Id);
+                Assert.Equal(txtPost.Type, updated.Type);
+                Assert.Equal(txtPost.PublicId, updated.PublicId);
+                Assert.Equal(txtPost.Title, updated.Title);
+                Assert.Equal("updated value", updatedPost.Body);
+                Assert.NotNull(updated.EditedAt);
+                Assert.Equal("2024-04-17T12:05:11Z", updated.EditedAt.Value.ToString("yyyy-MM-ddTHH:mm:ssZ"));
             }
         }
 
@@ -333,49 +340,56 @@ namespace DiscuitSharp.Test.Authenticated
         UpdatePost_ModifyPostTextContent_UpdateTextPostContent()
         {
             var client = await discClentTask;
-            PublicPostId publicPostId = new("Rg8TkGaE");
-            var post = await client.Get(publicPostId);
-            post!.Title = "updated title";
-
-            Assert.IsType<TextPost>(post);
-            if (post is TextPost txtPost)
+            TextPost txtPost = new()
             {
-                txtPost.Body = "updated value";
-                var updated = await client.Update(post);
+                Id = new("17c68bb8829688ba13844398"),
+                Type = Post.Kind.Text,
+                PublicId = new PublicPostId("Rg8TkGaE"),
+                Title = "original title",
+                Body = "Oh, Canada"
+            };
 
-                if (updated is TextPost updatedPost)
-                {
-                    Assert.NotNull(updatedPost);
-                    Assert.Equal(Post.Kind.Text, updatedPost.Type);
-                    Assert.Equal("updated value", updatedPost.Body);
+            txtPost!.Title = "updated title";
+            txtPost.Body = "updated value";
+            var updated = await client.Update(txtPost);
 
-                }
-            }
+            if (updated is TextPost updatedPost)
+            {
+                Assert.NotNull(updatedPost);
+                Assert.Equal(Post.Kind.Text, updatedPost.Type);
+                Assert.Equal("updated value", updatedPost.Body);
+                Assert.Equal("updated title", updatedPost.Title);
+            }        
         }
 
         [Fact] public async Task
         UpdatePost_UpdateImagePostContent_ReturnUpdateImagePost()
         {
             var client = await discClentTask;
-            PublicPostId publicPostId = new("vclkj85d");
-            var post = await client.Get(publicPostId);
-            Assert.NotNull(post);
-            if (post is ImagePost org)
+            ImagePost imgPost = new()
             {
-                org.Image = new() { Id = "j09K8xasdsfYlkj3jf2" };
+                Id = new("17c68636766fdade1af11c4d"),
+                Type = Post.Kind.Image,
+                PublicId = new PublicPostId("vclkj85d"),
+                Title = "original title",
+                Image = new() { Id = "hh0d9sdisd93838sdf", Url = "https://example.ca/image1.jpg" }
+            };
+            imgPost.Image = new() { Id = "j09K8xasdsfYlkj3jf2", Url = "https://example.net/image2.jpg" };
+            imgPost.Title = "Updated Image";
 
-                var updated = await client.Update(post);
+            var updated = await client.Update(imgPost);
 
-                Assert.NotNull(updated);
-                Assert.IsType<ImagePost>(updated);
-                if (updated is ImagePost img)
-                {
-                    Assert.NotNull(img.Image);
-                    Assert.Equal(org.Image.Id, img.Image.Id);
-                    Assert.Equal("https://example.net/image2.jpg", img.Image.Url);
-                    Assert.NotNull(img.EditedAt);
-                    Assert.Equal("2024-04-17T12:05:11Z", img.EditedAt.Value.ToString("yyyy-MM-ddTHH:mm:ssZ"));
-                }
+            Assert.NotNull(updated);
+            Assert.IsType<ImagePost>(updated);
+            if (updated is ImagePost img)
+            {
+                Assert.NotNull(img.Image);
+                Assert.Equal("Updated Image", img.Title);
+                Assert.Equal(imgPost.Image.Id, img.Image.Id);
+                Assert.Equal(imgPost.Image.Url, img.Image.Url);
+                Assert.NotNull(img.EditedAt);
+                Assert.Equal("2024-04-17T12:05:11Z", img.EditedAt.Value.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+            
             }
         }
 
@@ -383,27 +397,32 @@ namespace DiscuitSharp.Test.Authenticated
         UpdatePost_UpdateLinkPostContent_ReturnUpdateLinkPost()
         {
             var client = await discClentTask;
-            PublicPostId publicPostId = new("vclkj85d");
-            var post = await client.Get(publicPostId);
-            Assert.NotNull(post);
-            if (post is LinkPost org)
+            LinkPost lnkPost = new()
             {
-                org.Link = new("https://example.net/page");
+                Id = new("17c68636766fdade1af11c4d"),
+                Type = Post.Kind.Image,
+                PublicId = new PublicPostId("vclkj85d"),
+                Title = "original title",
+                Link = new("https://example.com/link")
+            };
 
-                var updated = await client.Update(post);
+            lnkPost.Title = "Updated Link";
+            lnkPost.Link = new("https://example.net/page");
 
-                Assert.NotNull(updated);
-                Assert.IsType<LinkPost>(post);
-                if (post is LinkPost lnk)
-                {
-                    Assert.NotNull(lnk.Link);
-                    Assert.Equal("https://example.net/page", lnk.Link.Url);
-                    Assert.Equal("www.example.net", lnk.Link.Hostname);
-                    Assert.NotNull(lnk.EditedAt);
+            var updated = await client.Update(lnkPost);
 
-                    Assert.Equal("2024-04-17T12:05:11Z", lnk.EditedAt.Value.ToString("yyyy-MM-ddTHH:mm:ssZ"));
-                }
+            Assert.NotNull(updated);
+            Assert.IsType<LinkPost>(lnkPost);
+            if (updated is LinkPost lnk)
+            {
+                Assert.NotNull(lnk.Link);
+                Assert.Equal("Updated Link", lnk.Title);
+                Assert.Equal("https://example.net/page", lnk.Link.Url);
+                Assert.Equal("example.net", lnk.Link.Hostname);
+                Assert.NotNull(lnk.EditedAt);
+                Assert.Equal("2024-04-15T19:45:32Z", lnk.EditedAt.Value.ToString("yyyy-MM-ddTHH:mm:ssZ"));
             }
+            
         }
 
         [Fact] public async Task

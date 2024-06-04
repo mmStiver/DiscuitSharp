@@ -29,8 +29,9 @@ namespace DiscuitSharp.Core.Content
             get { return this?.body ?? String.Empty; }
             set
             {
+                if (this.body != null && value != null)
+                    this["Body"] = value;
                 this.body = value;
-                this["body"] = value;
             }
         }
         public int? Upvotes { get; init; }
@@ -46,26 +47,7 @@ namespace DiscuitSharp.Core.Content
         public DiscuitUser? Author { get; init; }
         public bool? UserVoted { get; init; }
         public bool? UserVotedUp { get; init; }
-
-        private Dictionary<string, string?> mutatedState = new();
-        public ReadOnlyDictionary<string, string?> MutatedState { get => new(mutatedState); }
         public bool ContentStripped { get; init; }
-
-        private string? this[string key]
-        {
-            get
-            {
-                if (mutatedState.TryGetValue(key, out string? value))
-                    return value?.ToString() ?? String.Empty;
-                return null;
-            }
-            set
-            {
-                if (!mutatedState.ContainsKey(key))
-                    mutatedState.Add(key, String.Empty);
-                mutatedState[key] = value;
-            }
-        }
 
         [JsonConstructor]
         public Comment()
@@ -80,6 +62,35 @@ namespace DiscuitSharp.Core.Content
             this.ParentId = parentId;
             this.Body = Body;
         }
+
+
+        #region IMutableState
+        protected string this[string key]
+        {
+            get
+            {
+                return
+                     (mutatedState.TryGetValue(key, out string? value))
+                    ? value
+                    : throw new KeyNotFoundException();
+            }
+            set
+            {
+                if (mutatedState.ContainsKey(key))
+                    mutatedState[key] = value;
+                else mutatedState.Add(key, value);
+            }
+        }
+
+        private Dictionary<string, string> mutatedState = new();
+        public ReadOnlyDictionary<string, string> MutatedState
+        {
+            get
+            {
+                return new(this.mutatedState);
+            }
+        }
+        #endregion
 
     }
 }
